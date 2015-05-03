@@ -1,1 +1,8 @@
 HELLO POO
+
+{% for article in articles %}
+    <a href="{{ article.URL }}"> <h1>{{ article.title }}</h1></a>
+    <p>{{ article.abstract }}
+
+    <hr>
+{% endfor %}
