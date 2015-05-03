@@ -1,8 +1,25 @@
-HELLO POO
+{% extends "visualizer/main.html" %}
 
 {% for article in articles %}
     <a href="{{ article.URL }}"> <h1>{{ article.title }}</h1></a>
     <p>{{ article.abstract }}
-
-    <hr>
 {% endfor %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>mews</h1>
+
+    <div class="list-group">
+      {% for article in articles %}
+        <a href="{{ article.URL }}" class="list-group-item">
+          <h4 class="list-group-item-heading">{{ article.title }}</h4>
+          <p class="list-group-item-text">{{ article.abstract }}</p>
+        </a>
+      {% endfor %} 
+    </div>
+
+</div>
+
+{% endblock %}
