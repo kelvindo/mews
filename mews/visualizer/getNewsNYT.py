@@ -1,6 +1,7 @@
 import urllib
 import requests
 import json
+from .models import Location
 
 def getTopStoriesNYT():
   url = 'http://api.nytimes.com/svc/topstories/v1/home.json?api-key=903cc78251a8120cd1be50993e594000:12:72000218'
