@@ -11,3 +11,4 @@ class Location(models.Model):
     lng = models.FloatField()
     lat = models.FloatField()
     name = models.CharField(max_length=200)
+    is_valid = models.BooleanField()

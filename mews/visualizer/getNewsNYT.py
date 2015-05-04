@@ -31,12 +31,22 @@ def getTopStoriesInfoNYT(item):
 def getLocationNYT(locations):
   for i in range(len(locations)):
     location = locations[i]
-    url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + urllib.quote(location)
-    url += '&key=AIzaSyDQVm4SWjSOB7fNfHk332pM3Te6IiPSyoM'
-    data = requests.get(url).json()
-    for result in data['results']:
-      latitude = result['geometry']['location']['lat']
-      longitude = result['geometry']['location']['lng']
-      name = result['formatted_address']
-      return {'lat': latitude, 'lng': longitude, 'name': name}
+    db_entry = Location.objects.filter(query=location)
+    if not db_entry:
+      url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + urllib.quote(location)
+      url += '&key=AIzaSyDQVm4SWjSOB7fNfHk332pM3Te6IiPSyoM'
+      data = requests.get(url).json()
+      for result in data['results']:
+        latitude = result['geometry']['location']['lat']
+        longitude = result['geometry']['location']['lng']
+        name = result['formatted_address']
+        new_location = Location(query=location, lat=latitude, lng=longitude, name=name, is_valid=True)
+        new_location.save()
+        return {'lat': latitude, 'lng': longitude, 'name': name}
+      new_location = Location(query=location, lat=0, lng=0, name="", is_valid=False)
+      new_location.save()
+    else:
+      db_entry = db_entry[0]
+      if db_entry.is_valid:
+        return {'lat': db_entry.lat, 'lng': db_entry.lng, 'name': db_entry.name}
   return None;

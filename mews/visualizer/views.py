@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Article
+from .models import Article, Location
 import getNewsNYT as NYTNews
 
 # Create your views here.
 def index(request):
-    articles = Article.objects.all()
-    context = {'articles': articles}
 
+    locations = Location.objects.all()
+    print locations
     articles = NYTNews.getTopStoriesNYT()
-    context = {'articles': articles}
+    context = {'articles': articles, 'locations': locations}
 
     return render(request, 'visualizer/index.html', context)
