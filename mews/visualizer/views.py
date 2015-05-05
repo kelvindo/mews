@@ -12,5 +12,7 @@ def index(request):
     return render(request, 'visualizer/index.html', context)
 
 def map(request):
-    context = {}
+    locations = Location.objects.all()
+    articles = NYTNews.getTopStoriesNYT()
+    context = {'articles': articles, 'locations': locations}
     return render(request, 'visualizer/map.html', context)
