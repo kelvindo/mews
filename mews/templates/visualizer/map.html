@@ -19,37 +19,38 @@
 
 
   <script>
-    var bombMap = new Datamap({
-    element: document.getElementById('container'),
-    scope: 'world',
-    geographyConfig: {
-        popupOnHover: false,
-        highlightOnHover: false
-    },
-    fills: {
-        'BLUE': '#1f77b4',
-        // 'RUS': '#9467bd',
-        // 'PRK': '#ff7f0e',
-        // 'PRC': '#2ca02c',
-        // 'IND': '#e377c2',
-        // 'GBR': '#8c564b',
-        // 'FRA': '#d62728',
-        // 'PAK': '#7f7f7f',
-        defaultFill: '#EDDC4E'
-    },
-    data: {
-        'RUS': {fillKey: 'RUS'},
-        'PRK': {fillKey: 'PRK'},
-        'PRC': {fillKey: 'PRC'},
-        'IND': {fillKey: 'IND'},
-        'GBR': {fillKey: 'GBR'},
-        'FRA': {fillKey: 'FRA'},
-        'PAK': {fillKey: 'PAK'},
-        'BLUE': {fillKey: 'USA'}
-    }
-});
+    var newsMap = new Datamap({
+      element: document.getElementById('container'),
+      scope: 'world',
+      geographyConfig: {
+          popupOnHover: false,
+          highlightOnHover: false
+      },
+      fills: {
+          'BLUE': '#1f77b4',
+          'YELLOW': '#B2B200',
+          // 'RUS': '#9467bd',
+          // 'PRK': '#ff7f0e',
+          // 'PRC': '#2ca02c',
+          // 'IND': '#e377c2',
+          // 'GBR': '#8c564b',
+          // 'FRA': '#d62728',
+          // 'PAK': '#7f7f7f',
+          defaultFill: '#6AAF6A'
+      },
+      data: {
+          'RUS': {fillKey: 'RUS'},
+          'PRK': {fillKey: 'PRK'},
+          'PRC': {fillKey: 'PRC'},
+          'IND': {fillKey: 'IND'},
+          'GBR': {fillKey: 'GBR'},
+          'FRA': {fillKey: 'FRA'},
+          'PAK': {fillKey: 'PAK'},
+          'BLUE': {fillKey: 'USA'}
+      }
+    });
 
-     var bombs = [
+    var articleDots = [
       {% for article in articles %}
         {
           name: '{{ article.title }}',
@@ -64,14 +65,16 @@
         },
       {% endfor %}
     ];
-//draw bubbles for bombs
-bombMap.bubbles(bombs, {
-    popupTemplate: function (geo, data) { 
-            return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
-            '<br/>' +  data.abstract,
-            '</div>'].join('');
-    }
-});
+
+    //draw bubbles for top articles
+    newsMap.bubbles(articleDots, {
+      popupTemplate: function (geo, data) { 
+              return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+              '<br/>' +  data.abstract,
+              '</div>'].join('');
+      }
+    });
+
   </script>
 
     <div class="list-group">
@@ -83,7 +86,6 @@ bombMap.bubbles(bombs, {
         </a>
       {% endfor %} 
     </div>
-
 
 </div>
 

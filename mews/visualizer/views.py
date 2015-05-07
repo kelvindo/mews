@@ -6,13 +6,18 @@ import getNewsNYT as NYTNews
 # Create your views here.
 def index(request):
     locations = Location.objects.all()
-    articles = NYTNews.getTopStoriesNYT()
-    context = {'articles': articles, 'locations': locations}
+    topArticles = NYTNews.getTopNYT()
+    mostViewedArticles = NYTNews.getMostPopularViewedNYT()
+    context = {'topArticles': topArticles, 'mostViewedArticles': mostViewedArticles, 'locations': locations}
 
     return render(request, 'visualizer/index.html', context)
 
 def map(request):
     locations = Location.objects.all()
-    articles = NYTNews.getTopStoriesNYT()
+    topArticles = NYTNews.getTopNYT()
+    mostViewedArticlesAll = NYTNews.getMostViewedNYT('all-sections', 1)
+    mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 1)
+    articles = topArticles + mostViewedArticlesAll + mostViewedArticlesWorld
     context = {'articles': articles, 'locations': locations}
+
     return render(request, 'visualizer/map.html', context)

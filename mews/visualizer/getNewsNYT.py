@@ -3,21 +3,55 @@ import requests
 import json
 from .models import Location
 
-def getTopStoriesNYT():
+def getTopNYT():
   url = 'http://api.nytimes.com/svc/topstories/v1/home.json?api-key=903cc78251a8120cd1be50993e594000:12:72000218'
   data = requests.get(url).json()
+  return getTopArticlesNYT(data)
+
+def getTopArticlesNYT(data):
   num_results = data['num_results']
   results = data['results']
-  top_stories = []
+  articles = []
   for i in range(0, num_results):
     item = results[i]
     if item['item_type'] == "Article":
-      article_data = getTopStoriesInfoNYT(item)
+      article_data = getArticleInfoNYT(item)
       if article_data['location'] != None:
-        top_stories.append(article_data)
-  return top_stories
+        articles.append(article_data)
+  return articles
 
-def getTopStoriesInfoNYT(item):
+# 20 is the max number of results on a page for NYT, each iteration gets 20 results
+def getMostViewedNYT(section, times_to_iterate):
+  articles = []
+  url = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/' + section + '/30.json?api-key=2cb1edcc1d8ca6933ff413e3fb574774:9:72000218'
+  data = requests.get(url).json();
+  num_results = data['num_results']
+  times_to_iterate = getNumIterates(num_results, times_to_iterate)
+  for i in range(0, times_to_iterate):
+    results_on_page = 20
+    is_last_run = (i == times_to_iterate - 1)
+    if is_last_run:
+      results_on_page = num_results - (20 * i)
+      if results_on_page > 20:
+        results_on_page = 20
+    articles += getMostViewedArticlesNYT(data, results_on_page);
+    url = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/' + section + '/30.json?api-key=2cb1edcc1d8ca6933ff413e3fb574774:9:72000218&offset=' + str(20 * i)
+    if not is_last_run:
+      data = requests.get(url).json();
+  return articles
+
+def getMostViewedArticlesNYT(data, num_results):
+  articles = []
+  results = data['results']
+  for i in range(0, num_results):
+    item = results[i]
+    if item['type'] == "Article":
+      article_data = getArticleInfoNYT(item)
+      if article_data['location'] != None:
+        articles.append(article_data)
+  return articles
+
+def getArticleInfoNYT(item):
   title = item['title']
   url = item['url']
   date_published = item['published_date'][:10]
@@ -50,3 +84,11 @@ def getLocationNYT(locations):
       if db_entry.is_valid:
         return {'lat': db_entry.lat, 'lng': db_entry.lng, 'name': db_entry.name}
   return None;
+
+def getNumIterates(num_results, times_to_iterate):
+  max_times_iterate = (num_results / 20) + 1
+  if max_times_iterate % 20 == 0:
+    max_times_iterate -= 1
+  if times_to_iterate > max_times_iterate:
+    times_to_iterate = max_times_iterate
+  return times_to_iterate
