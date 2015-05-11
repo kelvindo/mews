@@ -8,4 +8,7 @@ urlpatterns = [
 
     #/map - shows the map
     url(r'^map$', views.map, name='map'),
+
+    #/mapbysection - lists articles by section
+    url(r'^mapwithfilters$', views.mapWithFilters, name='mapwithfilters')
     ]

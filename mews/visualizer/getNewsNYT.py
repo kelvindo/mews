@@ -3,6 +3,23 @@ import requests
 import json
 from .models import Location
 
+##########################################################################
+#                                                                        #
+# getTopNYT() and getMostViewedNYT(section, times_to_iterate) should be  #
+# the ONLY functions being called outside this file.                     #
+#                                                                        #
+# Both functions return an array of articles, with each article being a  #
+# dictionary with the following keys:                                    #
+#    - title, url, date_published, section, source, abstract, location   #
+#                                                                        #
+# getTopNYT() fetches the articles from the front page of the NYTs       #
+#                                                                        #
+# getMostViewedNYT(section, times_to_iterate) has two parameters:        #
+#    - section: string, only fetches articles with same section          #
+#    - times_to_iterate: int, gets (20 * times_to_iterate) articles      #
+#                                                                        #
+##########################################################################
+
 def getTopNYT():
   url = 'http://api.nytimes.com/svc/topstories/v1/home.json?api-key=903cc78251a8120cd1be50993e594000:12:72000218'
   data = requests.get(url).json()
@@ -20,7 +37,6 @@ def getTopArticlesNYT(data):
         articles.append(article_data)
   return articles
 
-# 20 is the max number of results on a page for NYT, each iteration gets 20 results
 def getMostViewedNYT(section, times_to_iterate):
   articles = []
   url = 'http://api.nytimes.com/svc/mostpopular/v2/mostviewed/' + section + '/30.json?api-key=2cb1edcc1d8ca6933ff413e3fb574774:9:72000218'
