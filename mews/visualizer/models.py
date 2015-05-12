@@ -4,7 +4,11 @@ from django.db import models
 class Article(models.Model):
     title = models.CharField(max_length=200)
     URL = models.URLField(max_length=200)
+    date_published = models.DateField()
+    section = models.CharField(max_length=200)
+    source = models.CharField(max_length=200)
     abstract = models.TextField()
+    location = models.ForeignKey('Location')
 
 class Location(models.Model):
     query = models.CharField(max_length=200)
