@@ -10,5 +10,8 @@ urlpatterns = [
     url(r'^map$', views.map, name='map'),
 
     #/mapbysection - lists articles by section
-    url(r'^mapwithfilters$', views.mapWithFilters, name='mapwithfilters')
+    url(r'^mapwithfilters$', views.mapWithFilters, name='mapwithfilters'),
+
+    #/maptopstories - bubbles by popularity
+    url(r'^maptopstories$', views.mapTopStories, name='maptopstories')
     ]

@@ -30,3 +30,11 @@ def mapWithFilters(request):
     context = {'articlesBySection': articlesBySection, 'articlesByDate': articlesByDate}
 
     return render(request, 'visualizer/mapwithfilters.html', context)
+
+def mapTopStories(request):
+    topArticles = NYTNews.getTopNYT()
+    mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 1)
+    articles = topArticles + mostViewedArticlesWorld
+    context = {'articles': articles}
+
+    return render(request, 'visualizer/maptopstories.html', context)
