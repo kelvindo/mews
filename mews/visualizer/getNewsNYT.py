@@ -126,13 +126,15 @@ def getSearchLocationNYT(keywords):
           name = result['formatted_address']
           new_location = Location(query=location, lat=latitude, lng=longitude, name=name, is_valid=True)
           new_location.save()
-          return {'lat': latitude, 'lng': longitude, 'name': name}
+          # return {'lat': latitude, 'lng': longitude, 'name': name}
+          return new_location
         new_location = Location(query=location, lat=0, lng=0, name="", is_valid=False)
         new_location.save()
       else:
         db_entry = db_entry[0]
         if db_entry.is_valid:
-          return {'lat': db_entry.lat, 'lng': db_entry.lng, 'name': db_entry.name}
+          # return {'lat': db_entry.lat, 'lng': db_entry.lng, 'name': db_entry.name}
+          return db_entry
   return None
 
 def getLocationNYT(locations):
@@ -149,14 +151,16 @@ def getLocationNYT(locations):
         name = result['formatted_address']
         new_location = Location(query=location, lat=latitude, lng=longitude, name=name, is_valid=True)
         new_location.save()
-        return {'lat': latitude, 'lng': longitude, 'name': name}
+        # return {'lat': latitude, 'lng': longitude, 'name': name}
+        return new_location
       new_location = Location(query=location, lat=0, lng=0, name="", is_valid=False)
       new_location.save()
     else:
       db_entry = db_entry[0]
       if db_entry.is_valid:
-        return {'lat': db_entry.lat, 'lng': db_entry.lng, 'name': db_entry.name}
-  return None
+        # return {'lat': db_entry.lat, 'lng': db_entry.lng, 'name': db_entry.name}
+        return db_entry
+  return None;
 
 def getNumIterates(num_results, times_to_iterate):
   max_times_iterate = (num_results / 20) + 1

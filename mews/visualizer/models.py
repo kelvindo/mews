@@ -10,6 +10,9 @@ class Article(models.Model):
     abstract = models.TextField()
     location = models.ForeignKey('Location')
 
+    def __str__(self):
+        return self.title
+
 class Location(models.Model):
     query = models.CharField(max_length=200)
     lng = models.FloatField()

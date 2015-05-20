@@ -58,8 +58,6 @@
           abstract: '{{ article.abstract }}',
           country: 'USSR',
           fillKey: 'BLUE',
-          significance: 'Largest thermonuclear weapon ever tested—scaled down from its initial 100 Mt design by 50%',
-          date: '1961-10-31',
           latitude: {{ article.location.lat }},
           longitude: {{ article.location.lng }}
         },
@@ -81,7 +79,7 @@
       {% for article in articles %}
         <a href="{{ article.url }}" class="list-group-item">
           <h4 class="list-group-item-heading">{{ article.title }}</h4>
-          <h5 class-"lost-group-item-heading">{{ article.location.name }}</h5>
+          <h5 class-"list-group-item-heading">{{ article.location.name }}</h5>
           <p class="list-group-item-text">{{ article.abstract }}</p>
         </a>
       {% endfor %} 
