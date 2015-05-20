@@ -12,11 +12,42 @@ def index(request):
 
     return render(request, 'visualizer/index.html', context)
 
-def map(request):
+def collect_articles(request):
     locations = Location.objects.all()
+    topArticles = NYTNews.getTopNYT()
+    mostViewedArticlesAll = NYTNews.getMostViewedNYT('all-sections', 3)
+    mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 3)
+    onlineArticles = topArticles + mostViewedArticlesAll + mostViewedArticlesWorld
+    newArticles = []
+    oldArticles = []
+
+    for article in onlineArticles:
+        existingArticle = Article.objects.filter(url=article['url'])
+        if existingArticle:
+            oldArticles.append(article)
+        else:
+            newArticles.append(article)
+            #TODO: Put in real location
+            exampleLocation = Location.objects.get(id=1)
+            newArticle = Article(title=article['title'], 
+                                 url=article['url'], 
+                                 date_published=article['date_published'], 
+                                 section=article['section'], 
+                                 source=article['source'], 
+                                 abstract=article['abstract'], 
+                                 location=exampleLocation)
+            newArticle.save()
+
+    articles = Article.objects.all()
+
+    context = {'articles': articles, 'newArticles': newArticles, 'oldArticles': oldArticles, 'locations': locations}
+    return render(request, 'visualizer/collect.html', context)
+
+def map(request):
     topArticles = NYTNews.getTopNYT()
     mostViewedArticlesAll = NYTNews.getMostViewedNYT('all-sections', 1)
     mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 1)
+    locations = Location.objects.all()
     articles = topArticles + mostViewedArticlesAll + mostViewedArticlesWorld
     context = {'articles': articles, 'locations': locations}
 

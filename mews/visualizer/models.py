@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class Article(models.Model):
     title = models.CharField(max_length=200)
-    URL = models.URLField(max_length=200)
+    url = models.URLField(max_length=200)
     date_published = models.DateField()
     section = models.CharField(max_length=200)
     source = models.CharField(max_length=200)

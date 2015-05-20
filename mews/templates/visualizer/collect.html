@@ -1,0 +1,58 @@
+{% extends "visualizer/main.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1>mews</h1>
+
+    <h3>New Articles</h3>
+    <div class="list-group">
+      {% for article in newArticles %}
+        <a href="{{ article.url }}" class="list-group-item">
+          <h4 class="list-group-item-heading">{{ article.title }}</h4>
+          <p class="list-group-item-text">{{ article.abstract }}</p>
+        </a>
+      {% endfor %} 
+    </div>
+
+    <h3>Old Articles</h3>
+    <div class="list-group">
+      {% for article in oldArticles %}
+        <a href="{{ article.url }}" class="list-group-item">
+          <h4 class="list-group-item-heading">{{ article.title }}</h4>
+          <p class="list-group-item-text">{{ article.abstract }}</p>
+        </a>
+      {% endfor %} 
+    </div>
+
+    <h3>Database Articles</h3>
+    <div class="list-group">
+      {% for article in articles %}
+        <a href="{{ article.url }}" class="list-group-item">
+          <h4 class="list-group-item-heading">{{ article.title }}</h4>
+          <p class="list-group-item-text">{{ article.abstract }}</p>
+        </a>
+      {% endfor %} 
+    </div>
+
+    <h3>Location Name Dictionary</h3>
+    <div>
+      <table class="table">
+        <tr>
+          <th>Query</th>
+          <th>Location</th> 
+        </tr>
+        {% for location in locations %}
+        <tr>
+          <td>{{ location.query }}</td>
+          <td>{{ location.name }}</td>
+        </tr>
+        {% endfor %}
+
+      </table>
+    </div>
+
+</div>
+
+{% endblock %}

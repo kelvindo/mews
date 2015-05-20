@@ -1,7 +1,7 @@
 import urllib
 import requests
 import json
-from .models import Location
+from .models import Location, Article
 
 ##########################################################################
 #                                                                        #

@@ -6,6 +6,9 @@ urlpatterns = [
     #/ - landing page. currently displays list of articles
     url(r'^$', views.index, name='index'),
 
+    #/collect_articles - shows the map
+    url(r'^collect_articles$', views.collect_articles, name='collect_articles'),
+
     #/map - shows the map
     url(r'^map$', views.map, name='map'),
 
