@@ -23,9 +23,8 @@ def map(request):
     return render(request, 'visualizer/map.html', context)
 
 def mapWithFilters(request):
-    topArticles = NYTNews.getTopNYT()
-    mostViewedArticles = NYTNews.getMostViewedNYT('all-sections', 1)
-    articlesBySection = aFilter.filterBySection(topArticles)
+    mostViewedArticles = NYTNews.getMostViewedNYT('all-sections', 3)
+    articlesBySection = aFilter.filterBySection(mostViewedArticles)
     articlesByDate = aFilter.filterByDate(mostViewedArticles)
     context = {'articlesBySection': articlesBySection, 'articlesByDate': articlesByDate}
 

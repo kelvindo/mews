@@ -1,11 +1,82 @@
 {% extends "visualizer/main.html" %}
 
+{% block head %}
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+  <script src="http://datamaps.github.io/scripts/datamaps.world.min.js"></script>
+
+{% endblock %}
+
 {% block content %}
 
 <div class="container">
 
   <h1>mews</h1>
   <h4>mapping your news</h4>
+
+  <div id="container" style="position: relative; width: 1000px; height: 600px;"></div>
+
+  <div id="section-filter-info"></div>
+
+  <script>
+    var newsMap = new Datamap({
+      element: document.getElementById('container'),
+      scope: 'world',
+      geographyConfig: {
+          popupOnHover: false,
+          highlightOnHover: false
+      },
+      fills: {
+          'BLUE': '#1f77b4',
+          'RED': '#ff0000',
+          'YELLOW': '#ffff00',
+          'ORANGE': '#ffa500',
+          'PURPLE': '#551A8B',
+          'BLACK': '#000000',
+          'GREY': '#7E7E7E',
+          'CYAN': '#00cdcd',
+          defaultFill: '#6AAF6A'
+      }
+    });
+
+    // Make sure colorsArray and fills in dataMap have same colors
+    var colorsArray = ['BLUE', 'RED', 'ORANGE', 'PURPLE', 'YELLOW', 'BLACK', 'GREY', 'CYAN'];
+    var articleDots = [];
+    var count = -1;
+    {% for section, articleArray in articlesBySection.items %}
+      count = count + 1;
+      {% for article in articleArray %}
+        articleDots.push(
+            {
+              name: '{{ article.title }}',
+              radius: 6,
+              abstract: '{{ article.abstract }}',
+              fillKey: colorsArray[count],
+              latitude: {{ article.location.lat }},
+              longitude: {{ article.location.lng }}
+            }
+        );
+      {% endfor %}
+    {% endfor %}
+
+    //draw bubbles for top articles
+    newsMap.bubbles(articleDots, {
+      popupTemplate: function (geo, data) { 
+              return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+              '<br/>' +  data.abstract,
+              '</div>'].join('');
+      }
+    });
+
+    var infoElem = document.getElementById('section-filter-info');
+    count = 0;
+    {% for section, articleArray in articlesBySection.items %}
+      infoElem.innerHTML += "<p>{{ section }}: " + colorsArray[count] + "</p>";
+      count = count + 1;
+    {% endfor %}
+
+  </script>
 
   <h3>Filter by date</h3>
 
