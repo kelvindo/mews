@@ -49,7 +49,7 @@ def map(request):
     mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 1)
     locations = Location.objects.all()
     articles = topArticles + mostViewedArticlesAll + mostViewedArticlesWorld
-    context = {'articles': articles, 'locations': locations}
+    context = {'articles': test, 'locations': locations}
 
     return render(request, 'visualizer/map.html', context)
 

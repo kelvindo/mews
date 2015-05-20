@@ -60,7 +60,6 @@
       {% endfor %}
     {% endfor %}
 
-    //draw bubbles for top articles
     newsMap.bubbles(articleDots, {
       popupTemplate: function (geo, data) { 
               return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
