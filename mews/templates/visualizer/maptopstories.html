@@ -1,0 +1,77 @@
+{% extends "visualizer/main.html" %}
+
+{% block head %}
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+  <script src="http://datamaps.github.io/scripts/datamaps.world.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+  <h1>mews</h1>
+  <h4>mapping your news</h4>
+
+  <div id="container" style="position: relative; width: 1000px; height: 600px;"></div>
+
+
+  <script>
+    var newsMap = new Datamap({
+      element: document.getElementById('container'),
+      scope: 'world',
+      geographyConfig: {
+          popupOnHover: false,
+          highlightOnHover: false
+      },
+      fills: {
+          'BLUE': '#1f77b4',
+          defaultFill: '#6AAF6A'
+      }
+    });
+
+    var count = 0;
+    var radiuses = [40, 30, 25, 25, 20, 20, 19, 18, 16, 15, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5];
+    var numRadiuses = radiuses.length;
+    var articleDots = [];
+    {% for article in articles %}
+      articleDots.push(
+          {
+            name: '{{ article.title }}',
+            radius: radiuses[count],
+            abstract: '{{ article.abstract }}',
+            fillKey: 'BLUE',
+            latitude: {{ article.location.lat }},
+            longitude: {{ article.location.lng }}
+          }
+      );
+      count = count + 1;
+      if (count > numRadiuses) count = numRadiuses - 1;
+    {% endfor %}
+
+    //draw bubbles for top articles
+    newsMap.bubbles(articleDots, {
+      popupTemplate: function (geo, data) { 
+              return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+              '<br/>' +  data.abstract,
+              '</div>'].join('');
+      }
+    });
+
+  </script>
+
+    <div class="list-group">
+      {% for article in articles %}
+        <a href="{{ article.url }}" class="list-group-item">
+          <h4 class="list-group-item-heading">{{ article.title }}</h4>
+          <h5 class-"lost-group-item-heading">{{ article.location.name }}</h5>
+          <p class="list-group-item-text">{{ article.abstract }}</p>
+        </a>
+      {% endfor %} 
+    </div>
+
+</div>
+
+{% endblock %}

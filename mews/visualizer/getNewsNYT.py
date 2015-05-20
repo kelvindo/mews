@@ -6,8 +6,8 @@ from .models import Location, Article
 ##########################################################################
 #                                                                        #
 # getTopNYT(), getMostViewedNYT(section, times_to_iterate), and          #
-# getByQueryNTY(query) should be the ONLY functions being called outside # 
-# this file.                                                             #
+# getByQueryNTY(query, num_calls) should be the ONLY functions being     #
+# called outside this file.                                              #
 #                                                                        #
 # All functions return an array of articles, with each article being a   #
 # dictionary with the following keys:                                    #
@@ -19,15 +19,19 @@ from .models import Location, Article
 #    - section: string, only fetches articles with same section          #
 #    - times_to_iterate: int, gets (20 * times_to_iterate) articles      #
 #                                                                        #
-# getByQueryNYT(query)                                                   #
+# getByQueryNYT(query, num_calls)                                        #
 #    - query: string over which to look for articles                     #
+#    - num_calls: number of calls to make, each returning 10 articles    #
 #                                                                        #
 ##########################################################################
 
-def getByQueryNYT(query):
-  url = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + urllib.quote(query) + '&api-key=7bc9f44690147072ba0ddbc8aa8a92d0:1:72000218'
-  data = requests.get(url).json()
-  return getSearchArticlesNYT(data)
+def getByQueryNYT(query, num_calls):
+  articles = []
+  for i in range(0, num_calls):
+    url = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + urllib.quote(query) + '&fq=document_type:("article")&page=' + str(i) + '&api-key=7bc9f44690147072ba0ddbc8aa8a92d0:1:72000218'
+    data = requests.get(url).json()
+    articles += getSearchArticlesNYT(data)
+  return articles
 
 def getTopNYT():
   url = 'http://api.nytimes.com/svc/topstories/v1/home.json?api-key=903cc78251a8120cd1be50993e594000:12:72000218'
