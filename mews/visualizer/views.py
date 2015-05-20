@@ -35,7 +35,7 @@ def collect_articles(request):
                                  section=article['section'], 
                                  source=article['source'], 
                                  abstract=article['abstract'], 
-                                 location=exampleLocation)
+                                 location=article['location'])
             newArticle.save()
 
     articles = Article.objects.all()
@@ -44,11 +44,12 @@ def collect_articles(request):
     return render(request, 'visualizer/collect.html', context)
 
 def map(request):
-    topArticles = NYTNews.getTopNYT()
-    mostViewedArticlesAll = NYTNews.getMostViewedNYT('all-sections', 1)
-    mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 1)
+    # topArticles = NYTNews.getTopNYT()
+    # mostViewedArticlesAll = NYTNews.getMostViewedNYT('all-sections', 1)
+    # mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 1)
+    # articles = topArticles + mostViewedArticlesAll + mostViewedArticlesWorld
+    articles = Article.objects.all()
     locations = Location.objects.all()
-    articles = topArticles + mostViewedArticlesAll + mostViewedArticlesWorld
     context = {'articles': articles, 'locations': locations}
 
     return render(request, 'visualizer/map.html', context)
