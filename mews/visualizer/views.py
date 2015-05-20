@@ -16,7 +16,7 @@ def collect_articles(request):
     locations = Location.objects.all()
     topArticles = NYTNews.getTopNYT()
     mostViewedArticlesAll = NYTNews.getMostViewedNYT('all-sections', 3)
-    mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 3)
+    mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 10)
     onlineArticles = topArticles + mostViewedArticlesAll + mostViewedArticlesWorld
     newArticles = []
     oldArticles = []
