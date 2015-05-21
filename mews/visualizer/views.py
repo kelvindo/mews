@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Article, Location
 import getNewsNYT as NYTNews
@@ -38,16 +38,22 @@ def collect_articles(request):
                                  location=article['location'])
             newArticle.save()
 
-    articles = Article.objects.all()
+    articles = Article.objects.order_by('-id')
+    numArticles = len(articles)
 
-    context = {'articles': articles, 'newArticles': newArticles, 'oldArticles': oldArticles, 'locations': locations}
+    context = {'articles': articles, 'newArticles': newArticles, 'oldArticles': oldArticles, 'locations': locations, 'numArticles': numArticles}
     return render(request, 'visualizer/collect.html', context)
 
+def remove_dups(request):
+    for row in Article.objects.all():
+        if Article.objects.filter(url=row.url).count() > 1:
+            row.delete()
+
+    return redirect('collect_articles')
+
+
+
 def map(request):
-    # topArticles = NYTNews.getTopNYT()
-    # mostViewedArticlesAll = NYTNews.getMostViewedNYT('all-sections', 1)
-    # mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 1)
-    # articles = topArticles + mostViewedArticlesAll + mostViewedArticlesWorld
     articles = Article.objects.all()
     locations = Location.objects.all()
     context = {'articles': articles, 'locations': locations}

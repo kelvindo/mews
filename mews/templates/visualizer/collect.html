@@ -2,7 +2,7 @@
 
 {% block head %}
 
-<meta http-equiv="refresh" content="300">
+<meta http-equiv="refresh" content="600">
 
 {% endblock %}
 
@@ -12,19 +12,11 @@
 
     <h1>mews</h1>
 
+    <h3>Total Articles: {{ numArticles }}</h3>
+
     <h3>New Articles</h3>
     <div class="list-group">
       {% for article in newArticles %}
-        <a href="{{ article.url }}" class="list-group-item">
-          <h4 class="list-group-item-heading">{{ article.title }}</h4>
-          <p class="list-group-item-text">{{ article.abstract }}</p>
-        </a>
-      {% endfor %} 
-    </div>
-
-    <h3>Old Articles</h3>
-    <div class="list-group">
-      {% for article in oldArticles %}
         <a href="{{ article.url }}" class="list-group-item">
           <h4 class="list-group-item-heading">{{ article.title }}</h4>
           <p class="list-group-item-text">{{ article.abstract }}</p>
