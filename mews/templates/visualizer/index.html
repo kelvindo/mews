@@ -39,6 +39,16 @@
           'BLACK': '#000000',
           'GREY': '#7E7E7E',
           'CYAN': '#00cdcd',
+          'ORANGE1': '#ff5714',
+          'ORANGE2': '#e8aa14',
+          'YELLOW2': '#e4ff1a',
+          'LIGHT_GREEN': '#6eeb83',
+          'LIGHT_CYAN': '#1be7ff',
+          'PINK': '#ff3676',
+          'TEAL': '#57bab7',
+          'YELLOW3': '#ffd103',
+          'PURPLE2': '#460d66',
+          'DARK_GREEN': '#3a4f23',
           defaultFill: '#6AAF6A'
       },
       data: {
@@ -63,7 +73,7 @@
     sectionButton.onclick=mapSections;
 
     var articleDots = [];
-    var loadTime = 1;
+    var loadTime = 0;
 
     mapArticles();
 
@@ -117,13 +127,31 @@
       clear();
 
       // Make sure colorsArray and fills in dataMap have same colors
-      var colorsArray = ['BLUE', 'RED', 'ORANGE', 'PURPLE', 'YELLOW', 'BLACK', 'GREY', 'CYAN'];
+      var colorsArray = ['BLUE', 
+                         'RED', 
+                         'ORANGE', 
+                         'PURPLE', 
+                         'YELLOW', 
+                         'BLACK', 
+                         'GREY', 
+                         'CYAN', 
+                         'ORANGE',
+                         'ORANGE2', 
+                         'YELLOW2',
+                         'LIGHT_GREEN',
+                         'LIGHT_CYAN',
+                         'PINK',
+                         'TEAL',
+                         'YELLOW3',
+                         'PURPLE2',
+                         'DARK_GREEN',
+                         ];
       var count = -1;
       var i = 0;
       {% for section, articleArray in articlesBySection.items %}
         count = count + 1;
         {% for article in articleArray %}
-          console.log("{{ section }}");
+          console.log(count);
           mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', colorsArray[count], {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
           
         {% endfor %}
