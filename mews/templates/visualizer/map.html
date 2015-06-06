@@ -28,14 +28,6 @@
       },
       fills: {
           'BLUE': '#1f77b4',
-          'YELLOW': '#B2B200',
-          // 'RUS': '#9467bd',
-          // 'PRK': '#ff7f0e',
-          // 'PRC': '#2ca02c',
-          // 'IND': '#e377c2',
-          // 'GBR': '#8c564b',
-          // 'FRA': '#d62728',
-          // 'PAK': '#7f7f7f',
           defaultFill: '#6AAF6A'
       },
       data: {
@@ -51,21 +43,27 @@
     });
 
     var articleDots = [];
-    var loadTime = 5000;
-    var numArticles = {{ numArticles}};
 
+    var loadTime = 20;
+    var numArticles = {{ numArticles }};
+
+    var i = 0;
     {% for article in articles %}
-      articleDots.push({
-        name: '{{ article.title }}',
-        radius: 5,
-        abstract: '{{ article.abstract }}',
-        country: 'USSR',
-        fillKey: 'BLUE',
-        latitude: {{ article.location.lat }},
-        longitude: {{ article.location.lng }}
-      });
+      mapArticleDelay('{{ article.title }}', '{{article.abstract}}', {{article.location.lat}}, {{article.location.lng}}, loadTime * i);
+      i++;
+    {% endfor %}
 
-      setTimeout(function(){
+    function mapArticleDelay(title, abstract, lat, lng, delay) {
+      setTimeout(function() {
+        articleDots.push({
+          name: title,
+          radius: 5,
+          abstract: abstract,
+          country: 'USSR',
+          fillKey: 'BLUE',
+          latitude: lat,
+          longitude: lng
+        });
         newsMap.bubbles(articleDots, {
           popupTemplate: function (geo, data) { 
                 return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
@@ -73,21 +71,8 @@
                 '</div>'].join('');
           }
         });
-      }, loadTime);
-
-      console.log(({{ forloop.counter }} * 1.0 / numArticles) * loadTime);
-    {% endfor %}
-    
-
-    //draw bubbles for top articles
-    // newsMap.bubbles(articleDots, {
-    //   popupTemplate: function (geo, data) { 
-    //           return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
-    //           '<br/>' +  data.abstract,
-    //           '<br/>' + '<img src="http://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg" alt="Smiley face" height="400" width="600">',
-    //           '</div>'].join('');
-    //   }
-    // });
+      }, delay);
+    }
 
   </script>
 
