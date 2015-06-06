@@ -15,9 +15,15 @@
   <h1>mews</h1>
   <h4>mapping your news</h4>
 
-  <button class="btn btn-default" id="map_btn" type="submit">Map</button>
-  <button class="btn btn-default" id="top_btn" type="submit">Top Stories</button>
-  <button class="btn btn-default" id="section_btn" type="submit">Sections</button>
+  <!-- <button class="btn btn-default" id="map_btn" type="submit">Map</button> -->
+  <!-- <button class="btn btn-default" id="top_btn" type="submit">Top Stories</button> -->
+  <!-- <button class="btn btn-default" id="section_btn" type="submit">Sections</button> -->
+
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation" id="map_btn"><a href="#">Map</a></li>
+    <li role="presentation" id="top_btn"><a href="#">Top Stories</a></li>
+    <li role="presentation" id="section_btn"><a href="#">Sections</a></li>
+  </ul>
 
   <div id="container" style="position: relative; width: 1000px; height: 600px;"></div>
 
@@ -96,6 +102,25 @@
           }
         });
       }, delay);
+
+
+      // articleDots.push({
+      //   name: title,
+      //   radius: radius,
+      //   abstract: abstract,
+      //   country: 'USSR',
+      //   fillKey: fillkey,
+      //   latitude: lat,
+      //   longitude: lng
+      // });
+      // newsMap.bubbles(articleDots, {
+      //   popupTemplate: function (geo, data) { 
+      //         return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+      //         '<br/>' +  data.abstract,
+      //         '</div>'].join('');
+      //   }
+      // });
+
     }
 
     function mapArticles() {
