@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Article, Location
+from .models import Article, Location, TopStories
 import getNewsNYT as NYTNews
 import articleFilter as aFilter
 
@@ -18,8 +18,11 @@ def collect_articles(request):
     mostViewedArticlesAll = NYTNews.getMostViewedNYT('all-sections', 3)
     mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 10)
     onlineArticles = topArticles + mostViewedArticlesAll + mostViewedArticlesWorld
+    mostViewedTop = NYTNews.getMostViewedNYT('world', 1)
+    mapTopStories = topArticles + mostViewedTop
     newArticles = []
     oldArticles = []
+    newTopStories = []
 
     for article in onlineArticles:
         existingArticle = Article.objects.filter(url=article['url'])
@@ -63,7 +66,7 @@ def map(request):
     return render(request, 'visualizer/map.html', context)
 
 def mapWithFilters(request):
-    mostViewedArticles = NYTNews.getMostViewedNYT('all-sections', 3)
+    mostViewedArticles = Article.objects.all()
     articlesBySection = aFilter.filterBySection(mostViewedArticles)
     articlesByDate = aFilter.filterByDate(mostViewedArticles)
     context = {'articlesBySection': articlesBySection, 'articlesByDate': articlesByDate}
@@ -71,9 +74,7 @@ def mapWithFilters(request):
     return render(request, 'visualizer/mapwithfilters.html', context)
 
 def mapTopStories(request):
-    topArticles = NYTNews.getTopNYT()
-    mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 1)
-    articles = topArticles + mostViewedArticlesWorld
+    articles = TopStories.objects.all()
     context = {'articles': articles}
 
     return render(request, 'visualizer/maptopstories.html', context)

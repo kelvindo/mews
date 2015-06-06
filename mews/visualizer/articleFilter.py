@@ -1,4 +1,4 @@
-from datetime import datetime 
+from datetime import datetime, date
 
 ##########################################################################
 #                                                                        #
@@ -18,7 +18,7 @@ from datetime import datetime
 def filterBySection(articles):
   sectionMap = {};
   for article in articles:
-    section = article['section']
+    section = article.section
     if section in sectionMap:
       articleArray = sectionMap[section]
       articleArray.append(article)
@@ -34,8 +34,8 @@ def filterByDate(articles):
   sevenDayArticles = []
   thirtyDayArticles = []
   for article in articles:
-    articleDate = datetime.strptime(article['date_published'], '%Y-%m-%d')
-    todayDate = datetime.today()
+    articleDate = article.date_published
+    todayDate = date.today()
     daysDifference = (todayDate - articleDate).days
     if daysDifference <= 1:
       oneDayArticles.append(article)
