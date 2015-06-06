@@ -17,7 +17,7 @@
 
   <button class="btn btn-default" id="map_btn" type="submit">Map</button>
   <button class="btn btn-default" id="top_btn" type="submit">Top Stories</button>
-  <button class="btn btn-default" type="submit">Sections</button>
+  <button class="btn btn-default" id="section_btn" type="submit">Sections</button>
 
   <div id="container" style="position: relative; width: 1000px; height: 600px;"></div>
 
@@ -32,6 +32,13 @@
       },
       fills: {
           'BLUE': '#1f77b4',
+          'RED': '#ff0000',
+          'YELLOW': '#ffff00',
+          'ORANGE': '#ffa500',
+          'PURPLE': '#551A8B',
+          'BLACK': '#000000',
+          'GREY': '#7E7E7E',
+          'CYAN': '#00cdcd',
           defaultFill: '#6AAF6A'
       },
       data: {
@@ -51,6 +58,9 @@
 
     var topStoriesButton = document.getElementById('top_btn');
     topStoriesButton.onclick=mapTopStories;
+
+    var sectionButton = document.getElementById('section_btn');
+    sectionButton.onclick=mapSections;
 
     var articleDots = [];
     var loadTime = 1;
@@ -101,6 +111,23 @@
         if (count > numRadiuses) count = numRadiuses - 1;
       {% endfor %}
 
+    }
+
+    function mapSections() {
+      clear();
+
+      // Make sure colorsArray and fills in dataMap have same colors
+      var colorsArray = ['BLUE', 'RED', 'ORANGE', 'PURPLE', 'YELLOW', 'BLACK', 'GREY', 'CYAN'];
+      var count = -1;
+      var i = 0;
+      {% for section, articleArray in articlesBySection.items %}
+        count = count + 1;
+        {% for article in articleArray %}
+          console.log("{{ section }}");
+          mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', colorsArray[count], {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
+          
+        {% endfor %}
+      {% endfor %}
     }
 
     function clear() {
