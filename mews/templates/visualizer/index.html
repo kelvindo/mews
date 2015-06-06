@@ -15,6 +15,10 @@
   <h1>mews</h1>
   <h4>mapping your news</h4>
 
+  <button class="btn btn-default" id="map_btn" type="submit">Map</button>
+  <button class="btn btn-default" id="top_btn" type="submit">Top Stories</button>
+  <button class="btn btn-default" type="submit">Sections</button>
+
   <div id="container" style="position: relative; width: 1000px; height: 600px;"></div>
 
 
@@ -28,14 +32,6 @@
       },
       fills: {
           'BLUE': '#1f77b4',
-          'YELLOW': '#B2B200',
-          // 'RUS': '#9467bd',
-          // 'PRK': '#ff7f0e',
-          // 'PRC': '#2ca02c',
-          // 'IND': '#e377c2',
-          // 'GBR': '#8c564b',
-          // 'FRA': '#d62728',
-          // 'PAK': '#7f7f7f',
           defaultFill: '#6AAF6A'
       },
       data: {
@@ -50,22 +46,28 @@
       }
     });
 
+    var mapButton = document.getElementById('map_btn');
+    mapButton.onclick=mapArticles;
+
+    var topStoriesButton = document.getElementById('top_btn');
+    topStoriesButton.onclick=mapTopStories;
+
     var articleDots = [];
-    var loadTime = 100;
-    var numArticles = {{ numArticles}};
+    var loadTime = 1;
 
-    {% for article in articles %}
-      articleDots.push({
-        name: '{{ article.title }}',
-        radius: 5,
-        abstract: '{{ article.abstract }}',
-        country: 'USSR',
-        fillKey: 'BLUE',
-        latitude: {{ article.location.lat }},
-        longitude: {{ article.location.lng }}
-      });
+    mapArticles();
 
-      setTimeout(function(){
+    function mapArticleDelay(title, radius, abstract, fillkey, lat, lng, delay) {
+      setTimeout(function() {
+        articleDots.push({
+          name: title,
+          radius: radius,
+          abstract: abstract,
+          country: 'USSR',
+          fillKey: fillkey,
+          latitude: lat,
+          longitude: lng
+        });
         newsMap.bubbles(articleDots, {
           popupTemplate: function (geo, data) { 
                 return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
@@ -73,21 +75,45 @@
                 '</div>'].join('');
           }
         });
-      }, loadTime);
+      }, delay);
+    }
 
-      console.log(({{ forloop.counter }} * 1.0 / numArticles) * loadTime);
-    {% endfor %}
-    
+    function mapArticles() {
+      clear();
 
-    //draw bubbles for top articles
-    // newsMap.bubbles(articleDots, {
-    //   popupTemplate: function (geo, data) { 
-    //           return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
-    //           '<br/>' +  data.abstract,
-    //           '<br/>' + '<img src="http://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg" alt="Smiley face" height="400" width="600">',
-    //           '</div>'].join('');
-    //   }
-    // });
+      var i = 0;
+      {% for article in articles %}
+        mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', 'BLUE', {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
+        i++;
+      {% endfor %}
+    } 
+
+    function mapTopStories() {
+      clear();
+
+      var count = 0;
+      var radiuses = [40, 30, 25, 25, 20, 20, 19, 18, 16, 15, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5];
+      var numRadiuses = radiuses.length;
+      var i = 0;
+      {% for topStory in topStories %}
+        mapArticleDelay('{{ topStory.title }}', radiuses[count], '{{ topStory.abstract }}', 'BLUE', {{ topStory.location.lat }}, {{ topStory.location.lng }}, loadTime * i);
+        count = count + 1;
+        if (count > numRadiuses) count = numRadiuses - 1;
+      {% endfor %}
+
+    }
+
+    function clear() {
+      articleDots = [];
+
+      newsMap.bubbles([], {
+          popupTemplate: function (geo, data) { 
+                return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+                '<br/>' +  data.abstract,
+                '</div>'].join('');
+          }
+        });
+    }
 
   </script>
 

@@ -7,9 +7,9 @@ import articleFilter as aFilter
 # Create your views here.
 def index(request):
     articles = Article.objects.all()
+    topStories = TopStories.objects.all()
     locations = Location.objects.all()
-    numArticles = len(articles)
-    context = {'articles': articles, 'locations': locations, 'numArticles': numArticles}
+    context = {'articles': articles, 'topStories': topStories, 'locations': locations}
 
     return render(request, 'visualizer/index.html', context)
 
