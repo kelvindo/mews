@@ -1,35 +1,210 @@
 {% extends "visualizer/main.html" %}
 
+{% block head %}
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+  <script src="http://datamaps.github.io/scripts/datamaps.world.min.js"></script>
+
+{% endblock %}
+
 {% block content %}
 
 <div class="container">
 
-    <h1>mews</h1>
+  <h1>mews</h1>
+  <h4>mapping your news</h4>
+
+  <!-- <button class="btn btn-default" id="map_btn" type="submit">Map</button> -->
+  <!-- <button class="btn btn-default" id="top_btn" type="submit">Top Stories</button> -->
+  <!-- <button class="btn btn-default" id="section_btn" type="submit">Sections</button> -->
+
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation" id="map_btn"><a href="#">Map</a></li>
+    <li role="presentation" id="top_btn"><a href="#">Top Stories</a></li>
+    <li role="presentation" id="section_btn"><a href="#">Sections</a></li>
+  </ul>
+
+  <div id="container" style="position: relative; width: 1000px; height: 600px;"></div>
+
+
+  <script>
+    var newsMap = new Datamap({
+      element: document.getElementById('container'),
+      scope: 'world',
+      geographyConfig: {
+          popupOnHover: false,
+          highlightOnHover: false
+      },
+      fills: {
+          'BLUE': '#1f77b4',
+          'RED': '#ff0000',
+          'YELLOW': '#ffff00',
+          'ORANGE': '#ffa500',
+          'PURPLE': '#551A8B',
+          'BLACK': '#000000',
+          'GREY': '#7E7E7E',
+          'CYAN': '#00cdcd',
+          'ORANGE1': '#ff5714',
+          'ORANGE2': '#e8aa14',
+          'YELLOW2': '#e4ff1a',
+          'LIGHT_GREEN': '#6eeb83',
+          'LIGHT_CYAN': '#1be7ff',
+          'PINK': '#ff3676',
+          'TEAL': '#57bab7',
+          'YELLOW3': '#ffd103',
+          'PURPLE2': '#460d66',
+          'DARK_GREEN': '#3a4f23',
+          defaultFill: '#6AAF6A'
+      },
+      data: {
+          'RUS': {fillKey: 'RUS'},
+          'PRK': {fillKey: 'PRK'},
+          'PRC': {fillKey: 'PRC'},
+          'IND': {fillKey: 'IND'},
+          'GBR': {fillKey: 'GBR'},
+          'FRA': {fillKey: 'FRA'},
+          'PAK': {fillKey: 'PAK'},
+          'BLUE': {fillKey: 'USA'}
+      }
+    });
+
+    var mapButton = document.getElementById('map_btn');
+    mapButton.onclick=mapArticles;
+
+    var topStoriesButton = document.getElementById('top_btn');
+    topStoriesButton.onclick=mapTopStories;
+
+    var sectionButton = document.getElementById('section_btn');
+    sectionButton.onclick=mapSections;
+
+    var articleDots = [];
+    var loadTime = 0;
+
+    mapArticles();
+
+    function mapArticleDelay(title, radius, abstract, fillkey, lat, lng, delay) {
+      setTimeout(function() {
+        articleDots.push({
+          name: title,
+          radius: radius,
+          abstract: abstract,
+          country: 'USSR',
+          fillKey: fillkey,
+          latitude: lat,
+          longitude: lng
+        });
+        newsMap.bubbles(articleDots, {
+          popupTemplate: function (geo, data) { 
+                return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+                '<br/>' +  data.abstract,
+                '</div>'].join('');
+          }
+        });
+      }, delay);
+
+
+      // articleDots.push({
+      //   name: title,
+      //   radius: radius,
+      //   abstract: abstract,
+      //   country: 'USSR',
+      //   fillKey: fillkey,
+      //   latitude: lat,
+      //   longitude: lng
+      // });
+      // newsMap.bubbles(articleDots, {
+      //   popupTemplate: function (geo, data) { 
+      //         return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+      //         '<br/>' +  data.abstract,
+      //         '</div>'].join('');
+      //   }
+      // });
+
+    }
+
+    function mapArticles() {
+      clear();
+
+      var i = 0;
+      {% for article in articles %}
+        mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', 'BLUE', {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
+        i++;
+      {% endfor %}
+    } 
+
+    function mapTopStories() {
+      clear();
+
+      var count = 0;
+      var radiuses = [40, 30, 25, 25, 20, 20, 19, 18, 16, 15, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5];
+      var numRadiuses = radiuses.length;
+      var i = 0;
+      {% for topStory in topStories %}
+        mapArticleDelay('{{ topStory.title }}', radiuses[count], '{{ topStory.abstract }}', 'BLUE', {{ topStory.location.lat }}, {{ topStory.location.lng }}, loadTime * i);
+        count = count + 1;
+        if (count > numRadiuses) count = numRadiuses - 1;
+      {% endfor %}
+
+    }
+
+    function mapSections() {
+      clear();
+
+      // Make sure colorsArray and fills in dataMap have same colors
+      var colorsArray = ['BLUE', 
+                         'RED', 
+                         'ORANGE', 
+                         'PURPLE', 
+                         'YELLOW', 
+                         'BLACK', 
+                         'GREY', 
+                         'CYAN', 
+                         'ORANGE',
+                         'ORANGE2', 
+                         'YELLOW2',
+                         'LIGHT_GREEN',
+                         'LIGHT_CYAN',
+                         'PINK',
+                         'TEAL',
+                         'YELLOW3',
+                         'PURPLE2',
+                         'DARK_GREEN',
+                         ];
+      var count = -1;
+      var i = 0;
+      {% for section, articleArray in articlesBySection.items %}
+        count = count + 1;
+        {% for article in articleArray %}
+          console.log(count);
+          mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', colorsArray[count], {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
+          
+        {% endfor %}
+      {% endfor %}
+    }
+
+    function clear() {
+      articleDots = [];
+
+      newsMap.bubbles([], {
+          popupTemplate: function (geo, data) { 
+                return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+                '<br/>' +  data.abstract,
+                '</div>'].join('');
+          }
+        });
+    }
+
+  </script>
 
     <div class="list-group">
       {% for article in articles %}
         <a href="{{ article.url }}" class="list-group-item">
           <h4 class="list-group-item-heading">{{ article.title }}</h4>
+          <h5 class-"list-group-item-heading">{{ article.location.name }}</h5>
           <p class="list-group-item-text">{{ article.abstract }}</p>
         </a>
       {% endfor %} 
-    </div>
-
-    <h3>Location Name Dictionary</h3>
-    <div>
-      <table class="table">
-        <tr>
-          <th>Query</th>
-          <th>Location</th> 
-        </tr>
-        {% for location in locations %}
-        <tr>
-          <td>{{ location.query }}</td>
-          <td>{{ location.name }}</td>
-        </tr>
-        {% endfor %}
-
-      </table>
     </div>
 
 </div>
