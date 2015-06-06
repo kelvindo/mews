@@ -6,9 +6,10 @@ import articleFilter as aFilter
 
 # Create your views here.
 def index(request):
+    articles = Article.objects.all()
     locations = Location.objects.all()
-    articles = NYTNews.getTopNYT()
-    context = {'articles': articles, 'locations': locations}
+    numArticles = len(articles)
+    context = {'articles': articles, 'locations': locations, 'numArticles': numArticles}
 
     return render(request, 'visualizer/index.html', context)
 
@@ -16,7 +17,7 @@ def collect_articles(request):
     locations = Location.objects.all()
     topArticles = NYTNews.getTopNYT()
     mostViewedArticlesAll = NYTNews.getMostViewedNYT('all-sections', 3)
-    mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 10)
+    mostViewedArticlesWorld = NYTNews.getMostViewedNYT('world', 3)
     onlineArticles = topArticles + mostViewedArticlesAll + mostViewedArticlesWorld
     mostViewedTop = NYTNews.getMostViewedNYT('world', 1)
     mapTopStories = topArticles + mostViewedTop

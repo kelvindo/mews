@@ -1,35 +1,104 @@
 {% extends "visualizer/main.html" %}
 
+{% block head %}
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+  <script src="http://datamaps.github.io/scripts/datamaps.world.min.js"></script>
+
+{% endblock %}
+
 {% block content %}
 
 <div class="container">
 
-    <h1>mews</h1>
+  <h1>mews</h1>
+  <h4>mapping your news</h4>
+
+  <div id="container" style="position: relative; width: 1000px; height: 600px;"></div>
+
+
+  <script>
+    var newsMap = new Datamap({
+      element: document.getElementById('container'),
+      scope: 'world',
+      geographyConfig: {
+          popupOnHover: false,
+          highlightOnHover: false
+      },
+      fills: {
+          'BLUE': '#1f77b4',
+          'YELLOW': '#B2B200',
+          // 'RUS': '#9467bd',
+          // 'PRK': '#ff7f0e',
+          // 'PRC': '#2ca02c',
+          // 'IND': '#e377c2',
+          // 'GBR': '#8c564b',
+          // 'FRA': '#d62728',
+          // 'PAK': '#7f7f7f',
+          defaultFill: '#6AAF6A'
+      },
+      data: {
+          'RUS': {fillKey: 'RUS'},
+          'PRK': {fillKey: 'PRK'},
+          'PRC': {fillKey: 'PRC'},
+          'IND': {fillKey: 'IND'},
+          'GBR': {fillKey: 'GBR'},
+          'FRA': {fillKey: 'FRA'},
+          'PAK': {fillKey: 'PAK'},
+          'BLUE': {fillKey: 'USA'}
+      }
+    });
+
+    var articleDots = [];
+    var loadTime = 100;
+    var numArticles = {{ numArticles}};
+
+    {% for article in articles %}
+      articleDots.push({
+        name: '{{ article.title }}',
+        radius: 5,
+        abstract: '{{ article.abstract }}',
+        country: 'USSR',
+        fillKey: 'BLUE',
+        latitude: {{ article.location.lat }},
+        longitude: {{ article.location.lng }}
+      });
+
+      setTimeout(function(){
+        newsMap.bubbles(articleDots, {
+          popupTemplate: function (geo, data) { 
+                return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+                '<br/>' +  data.abstract,
+                '</div>'].join('');
+          }
+        });
+      }, loadTime);
+
+      console.log(({{ forloop.counter }} * 1.0 / numArticles) * loadTime);
+    {% endfor %}
+    
+
+    //draw bubbles for top articles
+    // newsMap.bubbles(articleDots, {
+    //   popupTemplate: function (geo, data) { 
+    //           return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+    //           '<br/>' +  data.abstract,
+    //           '<br/>' + '<img src="http://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg" alt="Smiley face" height="400" width="600">',
+    //           '</div>'].join('');
+    //   }
+    // });
+
+  </script>
 
     <div class="list-group">
       {% for article in articles %}
         <a href="{{ article.url }}" class="list-group-item">
           <h4 class="list-group-item-heading">{{ article.title }}</h4>
+          <h5 class-"list-group-item-heading">{{ article.location.name }}</h5>
           <p class="list-group-item-text">{{ article.abstract }}</p>
         </a>
       {% endfor %} 
-    </div>
-
-    <h3>Location Name Dictionary</h3>
-    <div>
-      <table class="table">
-        <tr>
-          <th>Query</th>
-          <th>Location</th> 
-        </tr>
-        {% for location in locations %}
-        <tr>
-          <td>{{ location.query }}</td>
-          <td>{{ location.name }}</td>
-        </tr>
-        {% endfor %}
-
-      </table>
     </div>
 
 </div>
