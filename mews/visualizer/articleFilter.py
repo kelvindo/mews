@@ -16,7 +16,7 @@ from datetime import datetime, date
 ##########################################################################
 
 def filterBySection(articles):
-  sectionMap = {};
+  sectionMap = {}
   for article in articles:
     section = article.section
     if section in sectionMap:
@@ -30,18 +30,19 @@ def filterBySection(articles):
   return sectionMap
 
 def filterByDate(articles):
-  oneDayArticles = []
-  sevenDayArticles = []
-  thirtyDayArticles = []
+  a_dict = {}
+  for i in range(31):
+    a_dict[str(i)] = []
   for article in articles:
     articleDate = article.date_published
     todayDate = date.today()
     daysDifference = (todayDate - articleDate).days
-    if daysDifference <= 1:
-      oneDayArticles.append(article)
-    if daysDifference <= 7:
-      sevenDayArticles.append(article)
-    if daysDifference <= 30:
-      thirtyDayArticles.append(article)
-  dateMap = {'1': oneDayArticles, '7': sevenDayArticles, '30': thirtyDayArticles}
-  return dateMap
+    if str(daysDifference) in a_dict:
+      a_array = a_dict[str(daysDifference)]
+      a_array.append(article)
+      a_dict[str(daysDifference)] = a_array
+    else:
+      a_array = []
+      a_array.append(article)
+      a_dict[str(daysDifference)] = a_array
+  return a_dict
