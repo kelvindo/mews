@@ -50,28 +50,44 @@
       }
     });
 
-    var articleDots = [
-      {% for article in articles %}
-        {
-          name: '{{ article.title }}',
-          radius: 5,
-          abstract: '{{ article.abstract }}',
-          country: 'USSR',
-          fillKey: 'BLUE',
-          latitude: {{ article.location.lat }},
-          longitude: {{ article.location.lng }}
-        },
-      {% endfor %}
-    ];
+    var articleDots = [];
+    var loadTime = 100;
+    var numArticles = {{ numArticles}};
+
+    {% for article in articles %}
+      articleDots.push({
+        name: '{{ article.title }}',
+        radius: 5,
+        abstract: '{{ article.abstract }}',
+        country: 'USSR',
+        fillKey: 'BLUE',
+        latitude: {{ article.location.lat }},
+        longitude: {{ article.location.lng }}
+      });
+
+      setTimeout(function(){
+        newsMap.bubbles(articleDots, {
+          popupTemplate: function (geo, data) { 
+                return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+                '<br/>' +  data.abstract,
+                '</div>'].join('');
+          }
+        });
+      }, loadTime);
+
+      console.log(({{ forloop.counter }} * 1.0 / numArticles) * loadTime);
+    {% endfor %}
+    
 
     //draw bubbles for top articles
-    newsMap.bubbles(articleDots, {
-      popupTemplate: function (geo, data) { 
-              return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
-              '<br/>' +  data.abstract,
-              '</div>'].join('');
-      }
-    });
+    // newsMap.bubbles(articleDots, {
+    //   popupTemplate: function (geo, data) { 
+    //           return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+    //           '<br/>' +  data.abstract,
+    //           '<br/>' + '<img src="http://i.ytimg.com/vi/tntOCGkgt98/maxresdefault.jpg" alt="Smiley face" height="400" width="600">',
+    //           '</div>'].join('');
+    //   }
+    // });
 
   </script>
 

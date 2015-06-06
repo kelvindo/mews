@@ -56,7 +56,9 @@ def remove_dups(request):
 def map(request):
     articles = Article.objects.all()
     locations = Location.objects.all()
-    context = {'articles': articles, 'locations': locations}
+    numArticles = len(articles)
+    context = {'articles': articles, 'locations': locations, 'numArticles': numArticles}
+
 
     return render(request, 'visualizer/map.html', context)
 
