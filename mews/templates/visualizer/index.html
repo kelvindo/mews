@@ -543,6 +543,7 @@
         {% for topStory in topStories %}
           mapArticleDelay('{{ topStory.title }}', radiuses[count], '{{ topStory.abstract }}', 'BLUE', {{ topStory.location.lat }}, {{ topStory.location.lng }}, '{{ topStory.url }}', loadTime * i);
           count = count + 1;
+          i++;
           if (count > numRadiuses) count = numRadiuses - 1;
         {% endfor %}
       }
