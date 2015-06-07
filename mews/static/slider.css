@@ -17,6 +17,10 @@ body {
   font-size: 80px;
 }
 
+.nav a {
+  color: black;
+}
+
 #map-slider-1 .slider-selection {
   background: #149bdf;
 }

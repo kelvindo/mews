@@ -12,15 +12,15 @@
 
 <div class="container">
 
-  <h1>mews</h1>
-  <h4>mapping your news</h4>
+  <h1 align="center">mews</h1>
+  <h4 align="center">mapping your news</h4>
 
   <!-- <button class="btn btn-default" id="map_btn" type="submit">Map</button> -->
   <!-- <button class="btn btn-default" id="top_btn" type="submit">Top Stories</button> -->
   <!-- <button class="btn btn-default" id="section_btn" type="submit">Sections</button> -->
 
-  <ul class="nav nav-tabs nav-justified">
-    <li role="presentation" id="map_btn" class="active"><a href="#">Map</a></li>
+  <ul class="nav nav-tabs nav-justified" style="font-size: 18px;">
+    <li role="presentation" id="map_btn"><a href="#">Map</a></li>
     <li role="presentation" id="top_btn"><a href="#">Top Stories</a></li>
     <li role="presentation" id="section_btn"><a href="#">Sections</a></li>
     <li role="presentation" id="time_btn"><a href="#">Time Travel</a></li>
@@ -92,7 +92,9 @@
     var articleDots = [];
     var loadTime = 0;
 
-    mapArticles();
+    $(document).ready(function() {
+      document.getElementById("map_btn").click();
+    });
 
     var a_by_date_js = {};
     var temp_array_0 = [];
@@ -545,7 +547,6 @@
         {% for topStory in topStories %}
           mapArticleDelay('{{ topStory.title }}', radiuses[count], '{{ topStory.abstract }}', 'BLUE', {{ topStory.location.lat }}, {{ topStory.location.lng }}, '{{ topStory.url }}', loadTime * i);
           count = count + 1;
-          i++;
           if (count > numRadiuses) count = numRadiuses - 1;
         {% endfor %}
       }
