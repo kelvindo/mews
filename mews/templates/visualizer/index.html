@@ -26,7 +26,7 @@
     <li role="presentation" id="time_btn"><a href="#">Time Travel</a></li>
   </ul>
 
-  <div id="container" style="position: relative; width: 1000px; height: 600px;"></div>
+  <div id="container" style="position: relative; width: 1000px; height: 600px; margin-left: auto; margin-right: auto;"></div>
 
   <div id="slider-div">
     <input id="map-slider" data-slider-id="map-slider-1" type="text" data-slider-min="0" data-slider-max="30" data-slider-step="1" data-slider-value="30" />
@@ -61,7 +61,8 @@
           'YELLOW3': '#ffd103',
           'PURPLE2': '#460d66',
           'DARK_GREEN': '#3a4f23',
-          defaultFill: '#6AAF6A'
+          defaultFill: '#FFFFFF'
+          //defaultFill: '#6AAF6A'
       },
       data: {
           'RUS': {fillKey: 'RUS'},
@@ -525,7 +526,7 @@
 
         var i = 0;
         {% for article in articles %}
-          mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', 'BLUE', {{ article.location.lat }}, {{ article.location.lng }}, '{{ article.url }}', loadTime * i);
+          mapArticleDelay('{{ article.title }}', 7, '{{ article.abstract }}', 'BLUE', {{ article.location.lat }}, {{ article.location.lng }}, '{{ article.url }}', loadTime * i);
           i++;
         {% endfor %}
       }
@@ -579,7 +580,7 @@
         {% for section, articleArray in articlesBySection.items %}
           count = count + 1;
           {% for article in articleArray %}
-            mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', colorsArray[count], {{ article.location.lat }}, {{ article.location.lng }}, '{{ article.url }}', loadTime * i);
+            mapArticleDelay('{{ article.title }}', 7, '{{ article.abstract }}', colorsArray[count], {{ article.location.lat }}, {{ article.location.lng }}, '{{ article.url }}', loadTime * i);
             
           {% endfor %}
         {% endfor %}
@@ -606,7 +607,7 @@
           var mapt_article = mapt_array[j];
           articleDots.push({
             name: mapt_article.title,
-            radius: 5,
+            radius: 7,
             abstract: mapt_article.abstract,
             url: mapt_article.source,
             fillKey: 'BLUE',

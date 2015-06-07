@@ -7,6 +7,10 @@
  *
  */
 
+body {
+  background: #A9A9A9;
+}
+
 #map-slider-1 .slider-selection {
   background: #BABABA;
 }
