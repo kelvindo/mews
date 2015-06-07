@@ -88,7 +88,7 @@
     var articleDots = [];
     var loadTime = 0;
 
-    mapArticles();
+    mapTopStories();
 
     var a_by_date_js = {};
     var temp_array_0 = [];
@@ -515,23 +515,6 @@
       }, delay);
 
 
-      // articleDots.push({
-      //   name: title,
-      //   radius: radius,
-      //   abstract: abstract,
-      //   country: 'USSR',
-      //   fillKey: fillkey,
-      //   latitude: lat,
-      //   longitude: lng
-      // });
-      // newsMap.bubbles(articleDots, {
-      //   popupTemplate: function (geo, data) { 
-      //         return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
-      //         '<br/>' +  data.abstract,
-      //         '</div>'].join('');
-      //   }
-      // });
-
     }
 
     function mapArticles() {
@@ -662,6 +645,10 @@
           }
         });
     }
+
+    $(newsMap.svg[0][0]).on('click', '.bubbles', function(e) {
+      console.log(e['target']);
+    });
 
   </script>
 
