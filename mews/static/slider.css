@@ -11,8 +11,13 @@ body {
   background: #A9A9A9;
 }
 
+#slider-text {
+  text-align: center;
+  font-size: 80px;
+}
+
 #map-slider-1 .slider-selection {
-  background: #BABABA;
+  background: #149bdf;
 }
 
 .slider {
