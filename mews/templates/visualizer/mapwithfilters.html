@@ -80,24 +80,24 @@
   <h3>Filter by date</h3>
 
   <div class="list-group">
-    <h4 class="list-group-item">1 Day Ago</h4>
-    {% for article in articlesByDate.1 %}
+    <h4 class="list-group-item">10 Days Ago</h4>
+    {% for article in articlesByDate.10 %}
       <a href="{{ article.url }}" class="list-group-item">
         <h4 class="list-group-item-heading">{{ article.title }}</h4>
         <h5 class-"lost-group-item-heading">{{ article.location.name }}</h5>
         <p class="list-group-item-text">{{ article.abstract }}</p>
       </a>
     {% endfor %}
-    <h4 class="list-group-item">1 Week Ago</h4>
-    {% for article in articlesByDate.7 %}
+    <h4 class="list-group-item">16 Days Ago</h4>
+    {% for article in articlesByDate.16 %}
       <a href="{{ article.url }}" class="list-group-item">
         <h4 class="list-group-item-heading">{{ article.title }}</h4>
         <h5 class-"lost-group-item-heading">{{ article.location.name }}</h5>
         <p class="list-group-item-text">{{ article.abstract }}</p>
       </a>
     {% endfor %}
-    <h4 class="list-group-item">1 Month Ago</h4>
-    {% for article in articlesByDate.30 %}
+    <h4 class="list-group-item">41 Days Ago</h4>
+    {% for article in articlesByDate.41 %}
       <a href="{{ article.url }}" class="list-group-item">
         <h4 class="list-group-item-heading">{{ article.title }}</h4>
         <h5 class-"lost-group-item-heading">{{ article.location.name }}</h5>

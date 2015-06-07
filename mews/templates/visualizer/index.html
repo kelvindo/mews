@@ -1,35 +1,678 @@
 {% extends "visualizer/main.html" %}
 
+{% block head %}
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.6.9/topojson.min.js"></script>
+  <script src="http://datamaps.github.io/scripts/datamaps.world.min.js"></script>
+
+{% endblock %}
+
 {% block content %}
 
 <div class="container">
 
-    <h1>mews</h1>
+  <h1>mews</h1>
+  <h4>mapping your news</h4>
+
+  <!-- <button class="btn btn-default" id="map_btn" type="submit">Map</button> -->
+  <!-- <button class="btn btn-default" id="top_btn" type="submit">Top Stories</button> -->
+  <!-- <button class="btn btn-default" id="section_btn" type="submit">Sections</button> -->
+
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation" id="map_btn"><a href="#">Map</a></li>
+    <li role="presentation" id="top_btn"><a href="#">Top Stories</a></li>
+    <li role="presentation" id="section_btn"><a href="#">Sections</a></li>
+    <li role="presentation" id="time_btn"><a href="#">Time Travel</a></li>
+  </ul>
+
+  <div id="container" style="position: relative; width: 1000px; height: 600px;"></div>
+
+  <div id="slider-div">
+    <input id="map-slider" data-slider-id="map-slider-1" type="text" data-slider-min="0" data-slider-max="30" data-slider-step="1" data-slider-value="30" />
+  </div>
+
+  <script>
+    var curr_button = -1;
+
+    var newsMap = new Datamap({
+      element: document.getElementById('container'),
+      scope: 'world',
+      geographyConfig: {
+          popupOnHover: false,
+          highlightOnHover: false
+      },
+      fills: {
+          'BLUE': '#1f77b4',
+          'RED': '#ff0000',
+          'YELLOW': '#ffff00',
+          'ORANGE': '#ffa500',
+          'PURPLE': '#551A8B',
+          'BLACK': '#000000',
+          'GREY': '#7E7E7E',
+          'CYAN': '#00cdcd',
+          'ORANGE1': '#ff5714',
+          'ORANGE2': '#e8aa14',
+          'YELLOW2': '#e4ff1a',
+          'LIGHT_GREEN': '#6eeb83',
+          'LIGHT_CYAN': '#1be7ff',
+          'PINK': '#ff3676',
+          'TEAL': '#57bab7',
+          'YELLOW3': '#ffd103',
+          'PURPLE2': '#460d66',
+          'DARK_GREEN': '#3a4f23',
+          defaultFill: '#6AAF6A'
+      },
+      data: {
+          'RUS': {fillKey: 'RUS'},
+          'PRK': {fillKey: 'PRK'},
+          'PRC': {fillKey: 'PRC'},
+          'IND': {fillKey: 'IND'},
+          'GBR': {fillKey: 'GBR'},
+          'FRA': {fillKey: 'FRA'},
+          'PAK': {fillKey: 'PAK'},
+          'BLUE': {fillKey: 'USA'}
+      }
+    });
+
+    var mapButton = document.getElementById('map_btn');
+    mapButton.onclick=mapArticles;
+
+    var topStoriesButton = document.getElementById('top_btn');
+    topStoriesButton.onclick=mapTopStories;
+
+    var sectionButton = document.getElementById('section_btn');
+    sectionButton.onclick=mapSections;
+
+    var timeButton = document.getElementById('time_btn');
+    timeButton.onclick=mapTime;
+
+    var articleDots = [];
+    var loadTime = 0;
+
+    mapTopStories();
+
+    var a_by_date_js = {};
+    var temp_array_0 = [];
+    {% for article in articlesByDate.0 %}
+      temp_array_0.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['0'] = temp_array_0;
+
+    var temp_array_1 = [];
+    {% for article in articlesByDate.1 %}
+      temp_array_1.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['1'] = temp_array_1;
+
+    var temp_array_2 = [];
+    {% for article in articlesByDate.2 %}
+      temp_array_2.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['2'] = temp_array_2;
+
+    var temp_array_3 = [];
+    {% for article in articlesByDate.3 %}
+      temp_array_3.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['3'] = temp_array_3;
+
+    var temp_array_4 = [];
+    {% for article in articlesByDate.4 %}
+      temp_array_4.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['4'] = temp_array_4;
+
+    var temp_array_5 = [];
+    {% for article in articlesByDate.5 %}
+      temp_array_5.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['5'] = temp_array_5;
+
+    var temp_array_6 = [];
+    {% for article in articlesByDate.6 %}
+      temp_array_6.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['6'] = temp_array_6;
+
+    var temp_array_7 = [];
+    {% for article in articlesByDate.7 %}
+      temp_array_7.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['7'] = temp_array_7;
+
+    var temp_array_8 = [];
+    {% for article in articlesByDate.8 %}
+      temp_array_8.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['8'] = temp_array_8;
+
+    var temp_array_9 = [];
+    {% for article in articlesByDate.9 %}
+      temp_array_9.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['9'] = temp_array_9;
+
+    var temp_array_10 = [];
+    {% for article in articlesByDate.10 %}
+      temp_array_10.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['10'] = temp_array_10;
+
+    var temp_array_11 = [];
+    {% for article in articlesByDate.11 %}
+      temp_array_11.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['11'] = temp_array_11;
+
+    var temp_array_12 = [];
+    {% for article in articlesByDate.12 %}
+      temp_array_12.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['12'] = temp_array_12;
+
+    var temp_array_13 = [];
+    {% for article in articlesByDate.13 %}
+      temp_array_13.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['13'] = temp_array_13;
+
+    var temp_array_14 = [];
+    {% for article in articlesByDate.14 %}
+      temp_array_14.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['14'] = temp_array_14;
+
+    var temp_array_15 = [];
+    {% for article in articlesByDate.15 %}
+      temp_array_15.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['15'] = temp_array_15;
+
+    var temp_array_16 = [];
+    {% for article in articlesByDate.16 %}
+      temp_array_16.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['16'] = temp_array_16;
+
+    var temp_array_17 = [];
+    {% for article in articlesByDate.17 %}
+      temp_array_17.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['17'] = temp_array_17;
+
+    var temp_array_18 = [];
+    {% for article in articlesByDate.18 %}
+      temp_array_18.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['18'] = temp_array_18;
+
+    var temp_array_19 = [];
+    {% for article in articlesByDate.19 %}
+      temp_array_10.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['19'] = temp_array_19;
+
+    var temp_array_20 = [];
+    {% for article in articlesByDate.20 %}
+      temp_array_20.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['20'] = temp_array_20;
+
+    var temp_array_21 = [];
+    {% for article in articlesByDate.21 %}
+      temp_array_21.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['21'] = temp_array_21;
+
+    var temp_array_22 = [];
+    {% for article in articlesByDate.22 %}
+      temp_array_22.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['22'] = temp_array_22;
+
+    var temp_array_23 = [];
+    {% for article in articlesByDate.23 %}
+      temp_array_23.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['23'] = temp_array_23;
+
+    var temp_array_24 = [];
+    {% for article in articlesByDate.24 %}
+      temp_array_24.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['24'] = temp_array_24;
+
+    var temp_array_25 = [];
+    {% for article in articlesByDate.25 %}
+      temp_array_25.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['25'] = temp_array_25;
+
+    var temp_array_26 = [];
+    {% for article in articlesByDate.26 %}
+      temp_array_26.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['26'] = temp_array_26;
+
+    var temp_array_27 = [];
+    {% for article in articlesByDate.27 %}
+      temp_array_27.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['27'] = temp_array_27;
+
+    var temp_array_28 = [];
+    {% for article in articlesByDate.28 %}
+      temp_array_28.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['28'] = temp_array_28;
+
+    var temp_array_29 = [];
+    {% for article in articlesByDate.29 %}
+      temp_array_29.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['29'] = temp_array_29;
+
+    var temp_array_30 = [];
+    {% for article in articlesByDate.30 %}
+      temp_array_30.push({
+        title: '{{ article.title }}',
+        abstract: '{{ article.abstract }}',
+        lat: {{ article.location.lat }},
+        lng: {{ article.location.lng }},
+        date_published: '{{ article.date_published }}',
+        source: '{{ article.source }}'
+      });
+    {% endfor %}
+    a_by_date_js['30'] = temp_array_30;
+
+    function mapArticleDelay(title, radius, abstract, fillkey, lat, lng, delay) {
+      setTimeout(function() {
+        articleDots.push({
+          name: title,
+          radius: radius,
+          abstract: abstract,
+          country: 'USSR',
+          fillKey: fillkey,
+          latitude: lat,
+          longitude: lng
+        });
+        newsMap.bubbles(articleDots, {
+          popupTemplate: function (geo, data) { 
+                return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+                '<br/>' +  data.abstract,
+                '</div>'].join('');
+          }
+        });
+      }, delay);
+
+
+    }
+
+    function mapArticles() {
+      if (curr_button != 0) {
+        clear();
+
+        var i = 0;
+        {% for article in articles %}
+          mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', 'BLUE', {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
+          i++;
+        {% endfor %}
+      }
+      curr_button = 0;
+    } 
+
+    function mapTopStories() {
+      if (curr_button != 1) {
+        clear();
+
+        var count = 0;
+        var radiuses = [40, 30, 25, 25, 20, 20, 19, 18, 16, 15, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5];
+        var numRadiuses = radiuses.length;
+        var i = 0;
+        {% for topStory in topStories %}
+          mapArticleDelay('{{ topStory.title }}', radiuses[count], '{{ topStory.abstract }}', 'BLUE', {{ topStory.location.lat }}, {{ topStory.location.lng }}, loadTime * i);
+          count = count + 1;
+          if (count > numRadiuses) count = numRadiuses - 1;
+        {% endfor %}
+      }
+      curr_button = 1;
+    }
+
+    function mapSections() {
+      if (curr_button != 2) {
+        clear();
+
+        // Make sure colorsArray and fills in dataMap have same colors
+        var colorsArray = ['BLUE', 
+                           'RED', 
+                           'ORANGE', 
+                           'PURPLE', 
+                           'YELLOW', 
+                           'BLACK', 
+                           'GREY', 
+                           'CYAN', 
+                           'ORANGE',
+                           'ORANGE2', 
+                           'YELLOW2',
+                           'LIGHT_GREEN',
+                           'LIGHT_CYAN',
+                           'PINK',
+                           'TEAL',
+                           'YELLOW3',
+                           'PURPLE2',
+                           'DARK_GREEN',
+                           ];
+        var count = -1;
+        var i = 0;
+        {% for section, articleArray in articlesBySection.items %}
+          count = count + 1;
+          {% for article in articleArray %}
+            console.log(count);
+            mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', colorsArray[count], {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
+            
+          {% endfor %}
+        {% endfor %}
+      }
+      curr_button = 2;
+    }
+
+    function mapTime() {
+      if (curr_button != 3) {
+        clear();
+
+        var slider = document.getElementById('slider-div');
+        slider.style.display = "block";
+        document.getElementById('map-slider-1').style.width = '174px';
+
+        articleDots = [];
+        {% for article in articlesByDate.0 %}
+          articleDots.push({
+            name: title,
+            radius: 5,
+            abstract: abstract,
+            country: 'USSR',
+            fillKey: fillkey,
+            latitude: lat,
+            longitude: lng
+          });
+        {% endfor %}
+        newsMap.bubbles(articleDots, {
+          popupTemplate: function (geo, data) { 
+                return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+                '<br/>' +  data.abstract,
+                '</div>'].join('');
+          }
+        });
+      }
+      curr_button = 3;
+    }
+
+    function mapTimeDots(daysBefore) {
+      articleDots = [];
+      for (var i = 0; i < daysBefore; i++) {
+        var mapt_array = a_by_date_js[i.toString()];
+        for (var j = 0; j < mapt_array.length; j++) {
+          var mapt_article = mapt_array[j];
+          articleDots.push({
+            name: mapt_article.title,
+            radius: 5,
+            abstract: mapt_article.abstract,
+            country: 'USSR',
+            fillKey: 'BLUE',
+            latitude: mapt_article.lat,
+            longitude: mapt_article.lng
+          });
+        }
+      }
+      newsMap.bubbles(articleDots, {
+        popupTemplate: function (geo, data) { 
+              return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+              '<br/>' +  data.abstract,
+              '</div>'].join('');
+        }
+      });
+    }
+
+    function clear() {
+      var slider = document.getElementById('slider-div');
+      slider.style.display = "none";
+
+      articleDots = [];
+
+      newsMap.bubbles([], {
+        popupTemplate: function (geo, data) { 
+              return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+              '<br/>' +  data.abstract,
+              '</div>'].join('');
+        }
+      });
+    }
+
+    $(newsMap.svg[0][0]).on('click', '.bubbles', function(e) {
+      console.log(e['target']);
+    });
+
+  </script>
 
     <div class="list-group">
       {% for article in articles %}
         <a href="{{ article.url }}" class="list-group-item">
           <h4 class="list-group-item-heading">{{ article.title }}</h4>
+          <h5 class-"list-group-item-heading">{{ article.location.name }}</h5>
           <p class="list-group-item-text">{{ article.abstract }}</p>
         </a>
       {% endfor %} 
-    </div>
-
-    <h3>Location Name Dictionary</h3>
-    <div>
-      <table class="table">
-        <tr>
-          <th>Query</th>
-          <th>Location</th> 
-        </tr>
-        {% for location in locations %}
-        <tr>
-          <td>{{ location.query }}</td>
-          <td>{{ location.name }}</td>
-        </tr>
-        {% endfor %}
-
-      </table>
     </div>
 
 </div>
