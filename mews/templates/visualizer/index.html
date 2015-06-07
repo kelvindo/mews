@@ -33,6 +33,8 @@
   </div>
 
   <script>
+    var curr_button = -1;
+
     var newsMap = new Datamap({
       element: document.getElementById('container'),
       scope: 'world',
@@ -535,91 +537,102 @@
     }
 
     function mapArticles() {
-      clear();
+      if (curr_button != 0) {
+        clear();
 
-      var i = 0;
-      {% for article in articles %}
-        mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', 'BLUE', {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
-        i++;
-      {% endfor %}
+        var i = 0;
+        {% for article in articles %}
+          mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', 'BLUE', {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
+          i++;
+        {% endfor %}
+      }
+      curr_button = 0;
     } 
 
     function mapTopStories() {
-      clear();
+      if (curr_button != 1) {
+        clear();
 
-      var count = 0;
-      var radiuses = [40, 30, 25, 25, 20, 20, 19, 18, 16, 15, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5];
-      var numRadiuses = radiuses.length;
-      var i = 0;
-      {% for topStory in topStories %}
-        mapArticleDelay('{{ topStory.title }}', radiuses[count], '{{ topStory.abstract }}', 'BLUE', {{ topStory.location.lat }}, {{ topStory.location.lng }}, loadTime * i);
-        count = count + 1;
-        if (count > numRadiuses) count = numRadiuses - 1;
-      {% endfor %}
-
+        var count = 0;
+        var radiuses = [40, 30, 25, 25, 20, 20, 19, 18, 16, 15, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5];
+        var numRadiuses = radiuses.length;
+        var i = 0;
+        {% for topStory in topStories %}
+          mapArticleDelay('{{ topStory.title }}', radiuses[count], '{{ topStory.abstract }}', 'BLUE', {{ topStory.location.lat }}, {{ topStory.location.lng }}, loadTime * i);
+          count = count + 1;
+          if (count > numRadiuses) count = numRadiuses - 1;
+        {% endfor %}
+      }
+      curr_button = 1;
     }
 
     function mapSections() {
-      clear();
+      if (curr_button != 2) {
+        clear();
 
-      // Make sure colorsArray and fills in dataMap have same colors
-      var colorsArray = ['BLUE', 
-                         'RED', 
-                         'ORANGE', 
-                         'PURPLE', 
-                         'YELLOW', 
-                         'BLACK', 
-                         'GREY', 
-                         'CYAN', 
-                         'ORANGE',
-                         'ORANGE2', 
-                         'YELLOW2',
-                         'LIGHT_GREEN',
-                         'LIGHT_CYAN',
-                         'PINK',
-                         'TEAL',
-                         'YELLOW3',
-                         'PURPLE2',
-                         'DARK_GREEN',
-                         ];
-      var count = -1;
-      var i = 0;
-      {% for section, articleArray in articlesBySection.items %}
-        count = count + 1;
-        {% for article in articleArray %}
-          console.log(count);
-          mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', colorsArray[count], {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
-          
+        // Make sure colorsArray and fills in dataMap have same colors
+        var colorsArray = ['BLUE', 
+                           'RED', 
+                           'ORANGE', 
+                           'PURPLE', 
+                           'YELLOW', 
+                           'BLACK', 
+                           'GREY', 
+                           'CYAN', 
+                           'ORANGE',
+                           'ORANGE2', 
+                           'YELLOW2',
+                           'LIGHT_GREEN',
+                           'LIGHT_CYAN',
+                           'PINK',
+                           'TEAL',
+                           'YELLOW3',
+                           'PURPLE2',
+                           'DARK_GREEN',
+                           ];
+        var count = -1;
+        var i = 0;
+        {% for section, articleArray in articlesBySection.items %}
+          count = count + 1;
+          {% for article in articleArray %}
+            console.log(count);
+            mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', colorsArray[count], {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
+            
+          {% endfor %}
         {% endfor %}
-      {% endfor %}
+      }
+      curr_button = 2;
     }
 
     function mapTime() {
-      clear();
+      if (curr_button != 3) {
+        clear();
 
-      var slider = document.getElementById('slider-div');
-      slider.style.display = "block";
-      document.getElementById('map-slider-1').style.width = '174px';
+        var slider = document.getElementById('slider-div');
+        slider.style.display = "block";
+        document.getElementById('map-slider-1').style.width = '174px';
 
-      articleDots = [];
-      {% for article in articlesByDate.0 %}
-        articleDots.push({
-          name: title,
-          radius: 5,
-          abstract: abstract,
-          country: 'USSR',
-          fillKey: fillkey,
-          latitude: lat,
-          longitude: lng
+        articleDots = [];
+        {% for article in articlesByDate.0 %}
+          articleDots.push({
+            name: title,
+            radius: 5,
+            abstract: abstract,
+            country: 'USSR',
+            fillKey: fillkey,
+            latitude: lat,
+            longitude: lng
+          });
+        {% endfor %}
+        newsMap.bubbles(articleDots, {
+          popupTemplate: function (geo, data) { 
+                return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+                '<br/>' +  data.abstract,
+                '</div>'].join('');
+          }
         });
-      {% endfor %}
-      newsMap.bubbles(articleDots, {
-        popupTemplate: function (geo, data) { 
-              return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
-              '<br/>' +  data.abstract,
-              '</div>'].join('');
-        }
-      });
+      }
+      curr_button = 3;
     }
 
     function mapTimeDots(daysBefore) {
@@ -655,12 +668,12 @@
       articleDots = [];
 
       newsMap.bubbles([], {
-          popupTemplate: function (geo, data) { 
-                return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
-                '<br/>' +  data.abstract,
-                '</div>'].join('');
-          }
-        });
+        popupTemplate: function (geo, data) { 
+              return ['<div class="hoverinfo">' +  '<b>' + data.name + '</b>',
+              '<br/>' +  data.abstract,
+              '</div>'].join('');
+        }
+      });
     }
 
   </script>
