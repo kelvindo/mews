@@ -28,6 +28,12 @@
 
   <div id="container" style="position: relative; width: 1000px; height: 600px;"></div>
 
+    <!-- Adding a legend for sections -->
+  <div id="sections-legend-div">
+    <ul class="nav nav-tabs nav-justified" id="sections-legend">
+    </ul>
+  </div>
+
   <div id="slider-div">
     <input id="map-slider" data-slider-id="map-slider-1" type="text" data-slider-min="0" data-slider-max="30" data-slider-step="1" data-slider-value="30" />
   </div>
@@ -43,24 +49,17 @@
           highlightOnHover: false
       },
       fills: {
-          'BLUE': '#1f77b4',
-          'RED': '#ff0000',
-          'YELLOW': '#ffff00',
-          'ORANGE': '#ffa500',
+          'BLUE': '#007FFF',
+          'RED': '#C23B22',
+          'YELLOW': '#FDFD96',
+          'ORANGE': '#FFB347',
           'PURPLE': '#551A8B',
           'BLACK': '#000000',
           'GREY': '#7E7E7E',
           'CYAN': '#00cdcd',
           'ORANGE1': '#ff5714',
-          'ORANGE2': '#e8aa14',
-          'YELLOW2': '#e4ff1a',
-          'LIGHT_GREEN': '#6eeb83',
-          'LIGHT_CYAN': '#1be7ff',
-          'PINK': '#ff3676',
-          'TEAL': '#57bab7',
-          'YELLOW3': '#ffd103',
-          'PURPLE2': '#460d66',
-          'DARK_GREEN': '#3a4f23',
+          'LIGHT_GREEN': '#007F66',
+          'LIGHT_BLUE': '#73A9C2',
           defaultFill: '#6AAF6A'
       },
       data: {
@@ -554,35 +553,45 @@
         clear();
 
         // Make sure colorsArray and fills in dataMap have same colors
-        var colorsArray = ['BLUE', 
-                           'RED', 
-                           'ORANGE', 
-                           'PURPLE', 
-                           'YELLOW', 
-                           'BLACK', 
+        var colorsArray = ['#C23B22', 
+                           '#FFB347', 
+                           '#FDFD96', 
+                           '#007F66', 
+                           '#73A9C2', 
+                           '#007FFF', 
                            'GREY', 
                            'CYAN', 
-                           'ORANGE',
-                           'ORANGE2', 
-                           'YELLOW2',
-                           'LIGHT_GREEN',
-                           'LIGHT_CYAN',
-                           'PINK',
-                           'TEAL',
-                           'YELLOW3',
-                           'PURPLE2',
-                           'DARK_GREEN',
+                           'BLACK',
                            ];
+
         var count = -1;
         var i = 0;
+        var sectionNames = [];
         {% for section, articleArray in articlesBySection.items %}
           count = count + 1;
+
+          sectionNames.push('{{ section }}');
+          console.log('{{ section }}');
+
           {% for article in articleArray %}
             console.log(count);
             mapArticleDelay('{{ article.title }}', 5, '{{ article.abstract }}', colorsArray[count], {{ article.location.lat }}, {{ article.location.lng }}, loadTime * i);
             
           {% endfor %}
         {% endfor %}
+
+        var legend = document.getElementById("sections-legend")
+        for (i = 0; i < count + 1; i++) {
+          var legenditem = document.createElement("li");
+          var t = document.createTextNode(sectionNames[i]);
+          legenditem.style.color = 'WHITE';
+          legenditem.style.textAlign = 'CENTER';
+          legenditem.style.backgroundColor = colorsArray[i];
+          legenditem.style.opacity = .5;
+          legenditem.appendChild(t);
+          legend.appendChild(legenditem);
+        }
+        
       }
       curr_button = 2;
     }
