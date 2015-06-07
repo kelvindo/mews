@@ -52,15 +52,16 @@
       fills: {
           'BLUE': '#007FFF',
           'RED': '#C23B22',
-          'YELLOW': '#FDFD96',
+          'YELLOW': '#79C879',
           'ORANGE': '#FFB347',
-          'PURPLE': '#551A8B',
+          'PURPLE': '#AA8CC5',
           'BLACK': '#000000',
           'GREY': '#7E7E7E',
           'CYAN': '#00cdcd',
           'ORANGE1': '#ff5714',
-          'LIGHT_GREEN': '#007F66',
-          'LIGHT_BLUE': '#73A9C2',
+          'LIGHTGREEN': '#007F66',
+          'LIGHTBLUE': '#73A9C2',
+          'PINK': '#FFB6C1',
           defaultFill: '#FFFFFF'
       },
       data: {
@@ -93,6 +94,50 @@
     $(document).ready(function() {
       document.getElementById("map_btn").click();
     });
+
+    // Make sure colorsArray and fills in dataMap have same colors
+    var colorsArray = ['RED', 
+                       'ORANGE', 
+                       'YELLOW', 
+                       'LIGHTGREEN', 
+                       'LIGHTBLUE', 
+                       'BLUE', 
+                       'GREY', 
+                       'CYAN', 
+                       'PURPLE',
+                       'PINK'
+                       ];
+
+     var colorsArray1 = ['#C23B22', 
+                         '#FFB347', 
+                         '#79C879', 
+                         '#007F66', 
+                         '#73A9C2', 
+                         '#007FFF', 
+                         'GREY', 
+                         'CYAN', 
+                         '#AA8CC5',
+                         '#FFB6C1'
+                         ];
+
+    var count = -1;
+    var sectionNames = [];
+    {% for section, articleArray in articlesBySection.items %}
+      count = count + 1;
+      sectionNames.push('{{ section }}');
+    {% endfor %}
+
+    var legend = document.getElementById("sections-legend")
+    for (var i = 0; i < count + 1; i++) {
+      var legenditem = document.createElement("li");
+      var t = document.createTextNode(sectionNames[i]);
+      legenditem.style.color = 'BLACK';
+      legenditem.style.textAlign = 'CENTER';
+      legenditem.style.backgroundColor = colorsArray1[i];
+      legenditem.style.opacity = .5;
+      legenditem.appendChild(t);
+      legend.appendChild(legenditem);
+    }
 
     var a_by_date_js = {};
     var temp_array_0 = [];
@@ -555,45 +600,15 @@
       if (curr_button != 2) {
         clear();
 
-        // Make sure colorsArray and fills in dataMap have same colors
-        var colorsArray = ['#C23B22', 
-                           '#FFB347', 
-                           '#FDFD96', 
-                           '#007F66', 
-                           '#73A9C2', 
-                           '#007FFF', 
-                           'GREY', 
-                           'CYAN', 
-                           'BLACK',
-                           ];
-
         var count = -1;
         var i = 0;
         var sectionNames = [];
         {% for section, articleArray in articlesBySection.items %}
           count = count + 1;
-
-          sectionNames.push('{{ section }}');
-          console.log('{{ section }}');
-
           {% for article in articleArray %}
             mapArticleDelay('{{ article.title }}', 7, '{{ article.abstract }}', colorsArray[count], {{ article.location.lat }}, {{ article.location.lng }}, '{{ article.url }}', loadTime * i);
-            
           {% endfor %}
         {% endfor %}
-
-        var legend = document.getElementById("sections-legend")
-        for (i = 0; i < count + 1; i++) {
-          var legenditem = document.createElement("li");
-          var t = document.createTextNode(sectionNames[i]);
-          legenditem.style.color = 'WHITE';
-          legenditem.style.textAlign = 'CENTER';
-          legenditem.style.backgroundColor = colorsArray[i];
-          legenditem.style.opacity = .5;
-          legenditem.appendChild(t);
-          legend.appendChild(legenditem);
-        }
-        
       }
       curr_button = 2;
     }
