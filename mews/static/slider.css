@@ -12,9 +12,15 @@ body {
   font-family: Century Gothic,Helvetica,Arial,sans-serif;
 }
 
+#map-outside {
+  margin-left: auto;
+  margin-right: auto;
+  width: 1200px;
+}
+
 #slider-text {
   text-align: center;
-  font-size: 80px;
+  font-size: 40px;
 }
 
 .nav a {
