@@ -9,8 +9,9 @@ def index(request):
     articles = Article.objects.all()
     topStories = TopStories.objects.all()
     articlesBySection = aFilter.filterBySection(articles)
+    articlesByDate = aFilter.filterByDate(articles)
     locations = Location.objects.all()
-    context = {'articles': articles, 'topStories': topStories, 'articlesBySection': articlesBySection, 'locations': locations}
+    context = {'articles': articles, 'topStories': topStories, 'articlesBySection': articlesBySection, 'locations': locations, 'articlesByDate': articlesByDate}
 
     return render(request, 'visualizer/index.html', context)
 
