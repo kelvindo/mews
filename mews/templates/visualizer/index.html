@@ -600,6 +600,9 @@
       if (curr_button != 2) {
         clear();
 
+        var legend = document.getElementById('sections-legend-div');
+        legend.style.display = "block";
+
         var count = -1;
         var i = 0;
         var sectionNames = [];
@@ -653,6 +656,9 @@
     function clear() {
       var slider = document.getElementById('slider-div');
       slider.style.display = "none";
+
+      var legend = document.getElementById('sections-legend-div');
+      legend.style.display = "none";
 
       articleDots = [];
 
