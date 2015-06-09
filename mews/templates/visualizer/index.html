@@ -159,15 +159,45 @@
 
     var legend = document.getElementById("sections-legend")
     for (var i = 0; i < count + 1; i++) {
-      var legenditem = document.createElement("li");
+      var legenditem = document.createElement("BUTTON");
       var t = document.createTextNode(sectionNames[i]);
+      legenditem.setAttribute('id', i);
       legenditem.style.color = 'BLACK';
       legenditem.style.textAlign = 'CENTER';
       legenditem.style.backgroundColor = colorsArray1[i];
       legenditem.style.opacity = .5;
+
       legenditem.appendChild(t);
       legend.appendChild(legenditem);
+
+      legenditem.onclick = function(){ filterSections(this); };
     }
+
+    function filterSections(button) {
+      console.log(button.id);
+      clear();
+
+      var legend = document.getElementById('sections-legend-div');
+      legend.style.display = "block";
+
+      var count = -1;
+      
+      {% for section, articleArray in articlesBySection.items %}
+        count = count + 1;
+
+        console.log(button.id + ',' + count);
+        console.log('{{section}}:' + count);
+
+        if (count == parseInt(button.id)) {
+          {% for article in articleArray %}
+            mapArticleDelay('{{ article.title }}', 7, '{{ article.abstract }}', colorsArray[count], {{ article.location.lat }}, {{ article.location.lng }}, '{{ article.location.name }}', '{{ article.url }}', loadTime * i);
+          {% endfor %}
+        }
+      {% endfor %}
+
+    }
+
+
 
     var a_by_date_js = {};
     var temp_array_0 = [];
