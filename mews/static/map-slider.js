@@ -3,9 +3,9 @@ $('#map-slider').slider();
 var previous = 0
 
 $("#map-slider").on("slide", function(slideEvt) {
-  if (previous != slideEvt.value) {
-    previous = slideEvt.value;
-    var daysBefore = 30 - slideEvt.value;
+  var daysBefore = 30 - slideEvt.value;
+  if (previous != daysBefore) {
+    previous = daysBefore;
     if (daysBefore != 1) {
       $('#slider-text').html(daysBefore + " Days Ago");
     } else {
