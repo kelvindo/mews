@@ -1,6 +1,6 @@
 $('#map-slider').slider();
 
-var previous = 30
+var previous = 0
 
 $("#map-slider").on("slide", function(slideEvt) {
   if (previous != slideEvt.value) {
