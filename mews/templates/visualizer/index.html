@@ -62,6 +62,14 @@
           'LIGHTGREEN': '#007F66',
           'LIGHTBLUE': '#73A9C2',
           'PINK': '#FFB6C1',
+          'HOTPINK': '#FF69B4',
+          'DARKPURPLE': '#551A8B',
+          'MINTGREEN': '#67FCD2',
+          'TEAL': '#31637D',
+          'WINE': '#4F1636',
+          'CORAL': 'FF4040',
+          'DARKORANGE': '#DB740C',
+          'BRIGHTRED': '#E23C3C',
           defaultFill: '#FFFFFF'
       },
       data: {
@@ -101,30 +109,52 @@
                        'YELLOW', 
                        'LIGHTGREEN', 
                        'LIGHTBLUE', 
+                       'CYAN',
                        'BLUE', 
-                       'GREY', 
-                       'CYAN', 
                        'PURPLE',
-                       'PINK'
+                       'PINK',
+                       'HOTPINK',
+                       'DARKPURPLE',
+                       'MINTGREEN',
+                       'TEAL',
+                       'WINE',
+                       'CORAL',
+                       'DARKORANGE',
+                       'BRIGHTRED',
+                       'GREY'
                        ];
 
      var colorsArray1 = ['#C23B22', 
                          '#FFB347', 
                          '#79C879', 
                          '#007F66', 
-                         '#73A9C2', 
-                         '#007FFF', 
-                         'GREY', 
+                         '#73A9C2',
                          'CYAN', 
+                         '#007FFF', 
                          '#AA8CC5',
-                         '#FFB6C1'
+                         '#FFB6C1',
+                         'HOTPINK',
+                         '#551A8B',
+                         '#67FCD2',
+                         '#31637D',
+                         '#4F1636',
+                         '#FF4040',
+                         '#DB740C',
+                         '#E23C3C',
+                         'GREY' 
                          ];
 
     var count = -1;
     var sectionNames = [];
     {% for section, articleArray in articlesBySection.items %}
       count = count + 1;
-      sectionNames.push('{{ section }}');
+
+      var section_name = '{{ section }}';
+      if (section_name == "Fashion &amp; Style") {
+        section_name = "Fashion & Style";
+      }
+
+      sectionNames.push(section_name);
     {% endfor %}
 
     var legend = document.getElementById("sections-legend")
